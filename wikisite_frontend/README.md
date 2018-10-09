@@ -9,31 +9,31 @@ If using Windows, I __highly__ recommend using the Ubuntu Subsystem that provide
 ### Installation
 1. Install Git in order to clone this repository and eventually commit any changes you may make
 
-  _OSX_
-    1. Install Brew at https://brew.sh
-    2. Run `brew install git` in your favorite terminal
+    _OSX_
+      1. Install Brew at https://brew.sh
+      2. Run `brew install git` in your favorite terminal
     
-  _Linux_
-    1. Open your favorite terminal and make sure git is installed
-    2. If it is not, use your distro's package manager to install it
+    _Linux_
+      1. Open your favorite terminal and make sure git is installed
+      2. If it is not, use your distro's package manager to install it
     
-  _Windows_
-    1. After enabling the Linux subsystem (Google it), check that git is installed
-    2. If it is not, `apt-get install git` should be sufficient to get it installed
+    _Windows_
+      1. After enabling the Linux subsystem (Google it), check that git is installed
+      2. If it is not, `apt-get install git` should be sufficient to get it installed
     
 2. Install Node and npm in order to install dependencies, compile/transpile react, and run our server
   
-  _OSX_
-    1. After installing Brew, Open your favorite terminal and run `brew install node`
-    2. Check that it is installed with `node -v`. This should return a version number in your terminal
-  
-  _Linux_
-    1. Open your favorite terminal and install using this [reference](https://nodejs.org/en/download/package-manager/)
-    2. Check that it is installed with `node -v`. This should return a version number in your terminal
+    _OSX_
+      1. After installing Brew, Open your favorite terminal and run `brew install node`
+      2. Check that it is installed with `node -v`. This should return a version number in your terminal
     
-  _Windows_
-    1. In Bash, run `curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -` then `sudo apt-get install -y nodejs`
-    2. Check that it is installed with `node -v`
+    _Linux_
+      1. Open your favorite terminal and install using this [reference](https://nodejs.org/en/download/package-manager/)
+      2. Check that it is installed with `node -v`. This should return a version number in your terminal
+      
+    _Windows_
+      1. In Bash, run `curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -` then `sudo apt-get install -y nodejs`
+      2. Check that it is installed with `node -v`
     
 3. Clone this repository
   1. In your favorite terminal, navigate to whatever directory you want to store this repo in
