@@ -8,12 +8,14 @@ services:
   - postgres:latest
 
 variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PIPENV_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pipenv"
   POSTGRES_DB: wiki_test
 
 cache:
   paths:
-    - ~/.cache/pip/
-    - ~/.cache/pipenv/
+    - .cache/pip/
+    - .cache/pipenv/
 
 before_script:
   - apt-get update -qq && apt-get install -y -qq postgresql-client
