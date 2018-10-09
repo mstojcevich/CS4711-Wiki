@@ -17,6 +17,17 @@ $ pipenv install
 
 This command will create a new Python virtual environment with the correct Python version and library versions. You'll need to do this each time a library is added or updated (but it'll be quicker each time).
 
+### Common problems
+
+The current version of `pipenv` doesn't work with the current version of `pip` (heh), which will result in an error about
+calling a module as a function. To fix this, run the following
+command:
+
+```
+$ pipenv run pip install pip==18.0
+```
+
+
 ## Running the project
 
 To run the project, you need to enter the virtual environment. To do so, run the following command:
@@ -34,7 +45,6 @@ $ python manage.py migrate && python manage.py runserver
 ```
 
 This will make any necessary changes to the database and then start up the server.
-
 
 ## Editor recommendation
 
