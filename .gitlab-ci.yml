@@ -1,0 +1,33 @@
+# Based on https://github.com/gitlabhq/gitlabhq/blob/master/vendor/gitlab-ci-yml/Django.gitlab-ci.yml
+
+# TODO we might want to use our own image
+# that provides both python and node
+image: python:3.7
+
+services:
+  - postgres:latest
+
+variables:
+  POSTGRES_DB: wiki_test
+
+cache:
+  paths:
+    - ~/.cache/pip/
+    - ~/.cache/pipenv/
+
+before_script:
+  - apt-get update -qq && apt-get install -y -qq postgresql-client
+  - cd wikisite_backend
+  - python -V
+  - pip install pipenv
+  - pipenv install --system
+  - cd ..
+
+test:
+  variables:
+    DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
+  script:
+    - cd wikisite_backend
+    - python manage.py test
+
+
