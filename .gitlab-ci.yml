@@ -1,8 +1,7 @@
 # Based on https://github.com/gitlabhq/gitlabhq/blob/master/vendor/gitlab-ci-yml/Django.gitlab-ci.yml
 
-# TODO we might want to use our own image
-# that provides both python and node
-image: python:3.7
+# https://hub.docker.com/r/nikolaik/python-nodejs/
+image: nikolaik/python-nodejs:latest
 
 services:
   - postgres:latest
@@ -24,6 +23,9 @@ before_script:
   - pip install pipenv
   - pipenv install --system
   - cd ..
+  - cd wikisite_frontend
+  - npm install
+  - cd ..
 
 test:
   variables:
@@ -31,5 +33,8 @@ test:
   script:
     - cd wikisite_backend
     - python manage.py test
+    - cd ..
+    - cd wikisite_frontend
+    - npm run test -- --coverage
 
 
