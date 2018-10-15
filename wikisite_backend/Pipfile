@@ -7,6 +7,9 @@ name = "pypi"
 django = "*"
 django-health-check = "*"
 "psycopg2-binary" = "*"
+pytest = "*"
+pytest-django = "*"
+pytest-cov = "*"
 
 [dev-packages]
 

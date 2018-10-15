@@ -33,7 +33,7 @@ test_backend:
     DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
   script:
     - cd wikisite_backend
-    - python manage.py test
+    - py.test --cov=.
 
 test_frontend:
   script:
