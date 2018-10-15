@@ -15,6 +15,7 @@ cache:
   paths:
     - .cache/pip/
     - .cache/pipenv/
+    - wikisite_frontend/node_modules/
 
 before_script:
   - apt-get update -qq && apt-get install -y -qq postgresql-client
@@ -27,14 +28,14 @@ before_script:
   - npm install
   - cd ..
 
-test:
+test_backend:
   variables:
     DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
   script:
     - cd wikisite_backend
     - python manage.py test
-    - cd ..
+
+test_frontend:
+  script:
     - cd wikisite_frontend
     - npm run test -- --coverage
-
-
