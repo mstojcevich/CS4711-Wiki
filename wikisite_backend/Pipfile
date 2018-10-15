@@ -10,6 +10,9 @@ django-health-check = "*"
 pytest = "*"
 pytest-django = "*"
 pytest-cov = "*"
+djangorestframework = "*"
+markdown = "*"
+django-filter = "*"
 
 [dev-packages]
 
