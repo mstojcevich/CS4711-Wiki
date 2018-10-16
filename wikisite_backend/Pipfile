@@ -20,6 +20,7 @@ pylint = "*"
 "pep8" = "*"
 black = "*"
 bandit = "*"
+"flake8-bugbear" = "*"
 
 [requires]
 python_version = "3.7"

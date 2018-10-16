@@ -32,7 +32,7 @@ test_backend:
 
 lint_backend:
   script:
-    - pip install flake8
+    - pip install flake8 flake8-bugbear
     - cd wikisite_backend
     - flake8
 
