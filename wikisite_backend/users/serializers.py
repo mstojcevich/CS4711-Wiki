@@ -18,17 +18,15 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         }
 
     def create(self, validated_data):
-        user = User(
-            username=validated_data["username"]
-        )
+        user = User(username=validated_data["username"])
         user.set_password(validated_data["password"])
         user.save()
         return user
 
-    def update(self, user, validated_data):
-        user.username = validated_data.get("username", user.username)
+    def update(self, instance, validated_data):
+        instance.username = validated_data.get("username", instance.username)
 
         if "password" in validated_data:
-            user.set_password(validated_data["password"])
-        user.save()
-        return user
+            instance.set_password(validated_data["password"])
+        instance.save()
+        return instance
