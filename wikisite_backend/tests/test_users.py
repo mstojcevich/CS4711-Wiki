@@ -9,7 +9,7 @@ from rest_framework import status
 class UserIndexTests(APITestCase):
     def test_one_user(self):
         """
-        Ensure that the users api returns as expected w/ one user
+        Ensure that the users api returns as expected w/ one user.
         """
         User.objects.create_user("test", "test@test.com", "hunter2")
 
@@ -23,7 +23,7 @@ class UserIndexTests(APITestCase):
 
     def test_order_by_creation(self):
         """
-        If there are multiple users, they should be ordered by creation time
+        If there are multiple users, they should be ordered by creation time.
         """
         User.objects.create_user("test", "test@test.com", "hunter2")
         User.objects.create_user("test2", "test2@test.com", "hunter3")
@@ -54,7 +54,7 @@ class UserCreationTests(APITestCase):
 
     def test_create_user(self):
         """
-        Test the happy path of creating a user
+        Test the happy path of creating a user.
         """
         user_data = {"username": "marcusant", "password": "@dequatePassword1"}
         response = self.client.post(
@@ -71,22 +71,18 @@ class UserCreationTests(APITestCase):
 
     def test_password_hashed(self):
         """
-        Test that the password is hashed correctly
+        Test that the password is hashed correctly.
         """
         user_data = {"username": "marcusant", "password": "@dequatePassword1"}
-        self.client.post(
-            "/api/users/", data=user_data, format="json"
-        )
-        user = User.objects.get(
-            username=user_data["username"]
-        )
+        self.client.post("/api/users/", data=user_data, format="json")
+        user = User.objects.get(username=user_data["username"])
 
         # Make sure Django can validate the password
         assert check_password(user_data["password"], user.password)
 
     def test_short_password(self):
         """
-        Test that a user w/ too short of a password is rejected
+        Test that a user w/ too short of a password is rejected.
         """
         user_data = {"username": "marcusant", "password": "j"}
         response = self.client.post(
@@ -97,7 +93,7 @@ class UserCreationTests(APITestCase):
 
     def test_missing_password(self):
         """
-        Test that a user w/o a password is rejected
+        Test that a user w/o a password is rejected.
         """
         user_data = {"username": "marcusant"}
         response = self.client.post(
@@ -108,7 +104,7 @@ class UserCreationTests(APITestCase):
 
     def test_missing_username(self):
         """
-        Test that a user w/o a username is rejected
+        Test that a user w/o a username is rejected.
         """
         user_data = {"password": "@dequatePassword1"}
 
@@ -123,3 +119,67 @@ class UserCreationTests(APITestCase):
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         new_num_users = User.objects.count()
         assert new_num_users == prev_num_users
+
+    def test_modify_other(self):
+        """
+        Test that a user cannot modify another user.
+        """
+        # Create a user
+        user_data = {"username": "marcusant", "password": "@dequatePassword1"}
+        self.client.post(
+            "/api/users/", data=user_data, format="json"
+        )
+
+        # Login as the user we just created
+        self.client.login(
+            username=user_data["username"], password=user_data["password"]
+        )
+
+        # Create another user
+        other_user_data = {"username": "otherDude", "password": "@otherPW1"}
+        self.client.post(
+            "/api/users/", data=other_user_data, format="json"
+        )
+        other_user = User.objects.get(username=other_user_data["username"])
+
+        # Try to update the user that isn't signed in
+        new_user_data = {
+            "username": "otherDude",
+            "password": "hahaGottem1@23",
+        }
+        response = self.client.patch(
+            f"/api/users/{other_user.id}/", data=new_user_data, format="json"
+        )
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    def test_modify_self(self):
+        """
+        Test that a user can modify themselves.
+        """
+        # Create a user
+        user_data = {"username": "marcusant", "password": "@dequatePassword1"}
+        response = self.client.post(
+            "/api/users/", data=user_data, format="json"
+        )
+        created_user = User.objects.get(username="marcusant")
+
+        # Login as the user we just created
+        self.client.login(
+            username=user_data["username"], password=user_data["password"]
+        )
+
+        new_user_data = {
+            "username": "marcusantt",
+            "password": "@dequatePassword2",
+        }
+        response = self.client.patch(
+            f"/api/users/{created_user.id}/", data=new_user_data, format="json"
+        )
+        assert response.status_code == status.HTTP_200_OK
+
+        # Make sure Django can validate the password
+        modified_user = User.objects.get(id=created_user.id)
+        assert modified_user.username == new_user_data["username"]
+        assert check_password(
+            new_user_data["password"], modified_user.password
+        )
