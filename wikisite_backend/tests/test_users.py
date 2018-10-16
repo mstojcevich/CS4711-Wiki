@@ -1,5 +1,6 @@
 import pytest
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import check_password
 from rest_framework.test import APITestCase
 from rest_framework import status
 
@@ -67,6 +68,21 @@ class UserCreationTests(APITestCase):
             username=user_data["username"]
         ).exists()
         assert user_exists
+
+    def test_password_hashed(self):
+        """
+        Test that the password is hashed correctly
+        """
+        user_data = {"username": "marcusant", "password": "@dequatePassword1"}
+        self.client.post(
+            "/api/users/", data=user_data, format="json"
+        )
+        user = User.objects.get(
+            username=user_data["username"]
+        )
+
+        # Make sure Django can validate the password
+        assert check_password(user_data["password"], user.password)
 
     def test_short_password(self):
         """

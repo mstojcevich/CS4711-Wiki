@@ -16,3 +16,11 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                 "help_text": f"Required. {MIN_PW_LENGTH} characters or more.",
             }
         }
+
+    def create(self, validated_data):
+        user = User(
+            username=validated_data["username"]
+        )
+        user.set_password(validated_data["password"])
+        user.save()
+        return user
