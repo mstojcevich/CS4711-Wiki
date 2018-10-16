@@ -36,6 +36,12 @@ lint_backend:
     - cd wikisite_backend
     - flake8
 
+audit_backend:
+  script:
+    - pip install bandit
+    - cd wikisite_backend
+    - bandit -x tests/ -r .
+
 test_frontend:
   script:
     - cd wikisite_frontend
