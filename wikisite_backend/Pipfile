@@ -18,7 +18,6 @@ django-filter = "*"
 pylint = "*"
 "flake8" = "*"
 "pep8" = "*"
-black = "*"
 bandit = "*"
 "flake8-bugbear" = "*"
 
