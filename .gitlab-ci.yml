@@ -19,20 +19,15 @@ cache:
 
 before_script:
   - apt-get update -qq && apt-get install -y -qq postgresql-client
-  - cd wikisite_backend
   - python -V
   - pip install pipenv
-  - pipenv install --system
-  - cd ..
-  - cd wikisite_frontend
-  - npm install
-  - cd ..
 
 test_backend:
   variables:
     DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
   script:
     - cd wikisite_backend
+    - pipenv install --system
     - py.test --cov=.
 
 lint_backend:
@@ -44,4 +39,5 @@ lint_backend:
 test_frontend:
   script:
     - cd wikisite_frontend
+    - npm install
     - npm run test -- --coverage
