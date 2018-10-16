@@ -35,6 +35,12 @@ test_backend:
     - cd wikisite_backend
     - py.test --cov=.
 
+lint_backend:
+  script:
+    - pip install flake8
+    - cd wikisite_backend
+    - flake8
+
 test_frontend:
   script:
     - cd wikisite_frontend

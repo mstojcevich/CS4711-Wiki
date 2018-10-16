@@ -6,5 +6,5 @@ from . import views
 # within the "pages" app
 
 urlpatterns = [
-        path('', view=views.index, name='articles-index')
+    path('', view=views.index, name='articles-index')
 ]
