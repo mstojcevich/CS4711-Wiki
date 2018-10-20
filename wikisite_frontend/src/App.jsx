@@ -2,6 +2,16 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+/**
+ * App component
+ *
+ * This component will wrap the entire application.
+ *
+ * It handles the following:
+ * - Rendering Navbar
+ * - Routing
+ *   - Render the currently routed to page component or a 404 page
+ */
 class App extends Component {
   render() {
     return (

@@ -1,0 +1,15 @@
+{
+  "extends": "airbnb",
+  "rules": {
+    "react/prefer-stateless-function" : {
+      "enabled": 0
+    },
+    "react/jsx-one-expression-per-line": {
+      "enabled": 0
+    }
+  },
+  "env": {
+    "jest": true,
+    "browser": true
+  }
+}
