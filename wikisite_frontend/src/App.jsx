@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Card, Container, Header } from 'semantic-ui-react';
 
+import NotFound from './components/NotFound/NotFound';
 /**
  * App component
  *
@@ -12,25 +13,26 @@ import './App.css';
  * - Routing
  *   - Render the currently routed to page component or a 404 page
  */
-class App extends Component {
+class App extends React.Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <React.Fragment>
+        {/* Render navbar above router / all pages */}
+
+        {/* Render page based on current URL */}
+        <Container className="top-pad">
+          <Card fluid>
+            <Card.Content>
+              <Router>
+                <Switch>
+                  <Route path="/" exact component={() => <Header as="h1">Home page</Header>} />
+                  <Route component={NotFound} />
+                </Switch>
+              </Router>
+            </Card.Content>
+          </Card>
+        </Container>
+      </React.Fragment>
     );
   }
 }
