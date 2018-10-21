@@ -12,6 +12,7 @@ code {
     monospace;
 }
 
-.top-pad {
-  padding-top: 2em;
+.page-margin {
+  /* Overriding margins of semantic ui react */
+  margin-top: 7em !important;
 }

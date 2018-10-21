@@ -14,7 +14,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --coverage --collectCoverageFrom='src/**/*js*' --collectCoverageFrom='!src/index.js'",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
