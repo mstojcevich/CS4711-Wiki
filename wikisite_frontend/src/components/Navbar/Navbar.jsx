@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, Container, Form } from 'semantic-ui-react';
+import { Menu, Container, Form, Responsive } from 'semantic-ui-react';
 import { Link, withRouter } from 'react-router-dom';
 
 /**
@@ -44,7 +44,7 @@ class NavBar extends React.Component {
 
   render() {
     return (
-      <Menu fixed="top" inverted className="navbar">
+      <Menu fixed="top" inverted>
         <Container>
           <Menu.Item header>
             <Link to="/">Wikisite</Link>

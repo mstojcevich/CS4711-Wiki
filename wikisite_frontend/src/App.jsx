@@ -24,7 +24,7 @@ class App extends React.Component {
             {/* Render navbar above router / all pages */}
             <Navbar />
             {/* Render page based on current URL */}
-            <Card fluid className="page-margin">
+            <Card fluid>
               <Card.Content>
                 <Switch>
                   <Route path="/" exact component={() => <Header as="h1">Home page</Header>} />
