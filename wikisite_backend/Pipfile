@@ -20,6 +20,9 @@ pylint = "*"
 "pep8" = "*"
 bandit = "*"
 "flake8-bugbear" = "*"
+pip = "*"
+coreapi = "*"
+pyyaml = "*"
 
 [requires]
 python_version = "3.7"
