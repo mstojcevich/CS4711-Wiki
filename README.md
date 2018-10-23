@@ -2,7 +2,7 @@
 
 ## Project structure
 
-`wikisite/` is the Django project for the wiki site. This contains everything for the backend and for serving the frontend.
+`wikisite_backend/` is the Django project for the wiki site. This contains everything for the backend and for serving the frontend.
 
 
 ## Setting up the development environment
