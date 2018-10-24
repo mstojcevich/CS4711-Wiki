@@ -18,7 +18,6 @@ coreapi = "*"
 [dev-packages]
 pylint = "*"
 "flake8" = "*"
-"pep8" = "*"
 bandit = "*"
 "flake8-bugbear" = "*"
 pip = "*"
