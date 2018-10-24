@@ -13,6 +13,7 @@ pytest-cov = "*"
 djangorestframework = "*"
 markdown = "*"
 django-filter = "*"
+coreapi = "*"
 
 [dev-packages]
 pylint = "*"
@@ -21,8 +22,7 @@ pylint = "*"
 bandit = "*"
 "flake8-bugbear" = "*"
 pip = "*"
-coreapi = "*"
-pyyaml = "*"
+pyyaml = "*"  # For static schema generation
 
 [requires]
 python_version = "3.7"
