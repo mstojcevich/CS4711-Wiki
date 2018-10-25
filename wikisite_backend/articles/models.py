@@ -18,6 +18,10 @@ class ArticleRevision(models.Model):
     """
 
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    author = models.ForeignKey(User, on_delete=models.PROTECT)
+
+    # We shouldn't ever orphan an article, but they can have a null
+    # author in case the revision was added by an admin or was migrated
+    # from a previous schema w/o authors.
+    author = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     content = models.TextField()

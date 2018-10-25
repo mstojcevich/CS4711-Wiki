@@ -5,22 +5,66 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
+def create_initial_revisions(apps, schema_editor):
+    """
+    Create a revision consisting of the initial content
+    for each pre-existing Article.
+    """
+    ArticleRevision = apps.get_model("articles", "ArticleRevision")
+    Article = apps.get_model("articles", "Article")
+    db_alias = schema_editor.connection.alias
+    all_articles = Article.objects.using(db_alias).all()
+    ArticleRevision.objects.using(db_alias).bulk_create(
+        [
+            ArticleRevision(
+                article=article,
+                author=None,
+                creation_date=article.creation_date,
+                content=article.content,
+            )
+            for article in all_articles
+        ]
+    )
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('articles', '0001_initial'),
+        ("articles", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ArticleRevision',
+            name="ArticleRevision",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('creation_date', models.DateTimeField(auto_now_add=True)),
-                ('content', models.TextField()),
-                ('article', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='articles.Article')),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("creation_date", models.DateTimeField(auto_now_add=True)),
+                ("content", models.TextField()),
+                (
+                    "article",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="articles.Article",
+                    ),
+                ),
+                (
+                    "author",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to=settings.AUTH_USER_MODEL,
+                        null=True
+                    ),
+                ),
             ],
         ),
+        migrations.RunPython(create_initial_revisions),
     ]
