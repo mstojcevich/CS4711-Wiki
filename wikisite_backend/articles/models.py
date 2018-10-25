@@ -11,6 +11,10 @@ class Article(models.Model):
     name = models.CharField(max_length=64, unique=True)
     content = models.TextField()
 
+    @property
+    def latest_revision(self):
+        return self.articlerevision_set.latest('id')
+
 
 class ArticleRevision(models.Model):
     """
