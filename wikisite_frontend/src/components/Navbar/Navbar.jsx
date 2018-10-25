@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, Container, Form, Responsive } from 'semantic-ui-react';
+import { Menu, Container, Form } from 'semantic-ui-react';
 import { Link, withRouter } from 'react-router-dom';
 
 /**
@@ -43,6 +43,7 @@ class NavBar extends React.Component {
   }
 
   render() {
+    const { user } = this.props;
     return (
       <Menu fixed="top" inverted>
         <Container>
@@ -59,19 +60,45 @@ class NavBar extends React.Component {
                 />
               </Form>
             </Menu.Item>
-            {/* These items should only appear when logged out */}
-            <Menu.Item>
-              <Link to="/login">Register</Link>
-            </Menu.Item>
-            <Menu.Item>
-              <Link to="/login">Login</Link>
-            </Menu.Item>
-            {/* Items past here should only appear when logged in */}
+            <UserSection user={user} />
           </Menu.Menu>
         </Container>
       </Menu>
     );
   }
+}
+
+function LoggedInUserSection(props) {
+  const { user } = props;
+  return (
+    <>
+      <Menu.Item>
+        <Link to="/profile">{ user.displayName }</Link>
+      </Menu.Item>
+    </>
+  );
+}
+
+function LoggedOutUserSection() {
+  return (
+    <>
+      <Menu.Item>
+        <Link to="/login">Register</Link>
+      </Menu.Item>
+      <Menu.Item>
+        <Link to="/login">Login</Link>
+      </Menu.Item>
+    </>
+  );
+}
+
+function UserSection(props) {
+  const { user } = props;
+  if (user !== null && user !== undefined) {
+    return <LoggedInUserSection user={user} />;
+  }
+
+  return <LoggedOutUserSection />;
 }
 
 export default withRouter(NavBar);
