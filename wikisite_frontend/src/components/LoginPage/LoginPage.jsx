@@ -52,11 +52,11 @@ class LoginPage extends React.Component {
   }
 
   /**
-   * Log the user in
+   * Log the user in, route back to '/'
    */
   onLoginSubmit() {
     const { username, password } = this.state;
-    const { onLogin } = this.props;
+    const { onLogin, history } = this.props;
 
     authenticateUser(
       username, password,
@@ -69,7 +69,9 @@ class LoginPage extends React.Component {
           passwordProblems: [],
           genericProblems: [],
         });
+
         onLogin(user);
+        history.goBack();
       },
       (failures) => {
         this.setState({
@@ -101,8 +103,9 @@ class LoginPage extends React.Component {
 
   render() {
     const { usernameProblems, passwordProblems, genericProblems } = this.state;
+
     return (
-      <div>
+      <React.Fragment>
         <Message
           attached="bottom"
           error
@@ -138,7 +141,7 @@ class LoginPage extends React.Component {
           />
           <Button type="submit">Log In</Button>
         </Form>
-      </div>
+      </React.Fragment>
     );
   }
 }
