@@ -2,7 +2,7 @@ import 'react-quill/dist/quill.snow.css';
 import ReactQuill from 'react-quill';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Button, Divider, Header } from 'semantic-ui-react';
+import { Header } from 'semantic-ui-react';
 
 class ArticleViewPage extends React.Component {
   constructor(props) {
@@ -31,7 +31,7 @@ class ArticleViewPage extends React.Component {
         <Header>{title}</Header>
         <ReactQuill
           value={quillDelta}
-          modules={{ toolbar: [] }}
+          modules={{ toolbar: false }}
           readOnly
         />
       </React.Fragment>
