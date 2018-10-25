@@ -8,7 +8,6 @@ from articles.models import Article
 
 @pytest.mark.django_db
 class ArticleIndexTests(APITestCase):
-
     def test_one_article(self):
         """
         Ensure that the articles api returns as expected w/ one article.
@@ -47,7 +46,6 @@ class ArticleIndexTests(APITestCase):
 
 @pytest.mark.django_db
 class ArticleViewTest(APITestCase):
-
     def test_view_article(self):
         """
         Ensure that the article view works as expected.
@@ -65,11 +63,9 @@ class ArticleViewTest(APITestCase):
 
 @pytest.mark.django_db
 class ArticleCreationTest(APITestCase):
-
     def setUp(self):
         self.user = User.objects.create_user(
-            username='testUser',
-            password='@dequatePassword1'
+            username="testUser", password="@dequatePassword1"
         )
         self.client.force_login(user=self.user)
 
@@ -78,16 +74,13 @@ class ArticleCreationTest(APITestCase):
         Test the happy path of creating an article.
         """
         article_data = {"name": "Test Article", "content": "This is a test article"}
-        response = self.client.post(
-            "/api/articles/", data=article_data, format="json",
-        )
+        response = self.client.post("/api/articles/", data=article_data, format="json")
 
         assert response.status_code == status.HTTP_201_CREATED
 
         # Make sure the article was created in the DB
         article_exists = Article.objects.filter(
-            name=article_data["name"],
-            content=article_data["content"]
+            name=article_data["name"], content=article_data["content"]
         ).exists()
         assert article_exists
 
@@ -99,11 +92,9 @@ class ArticleCreationTest(APITestCase):
         article_data = {
             "name": "Test Article",
             "content": "This is a test article",
-            "creation_date": "2018-10-25T02:23:59.962974Z"
+            "creation_date": "2018-10-25T02:23:59.962974Z",
         }
-        self.client.post(
-            "/api/articles/", data=article_data, format="json"
-        )
+        self.client.post("/api/articles/", data=article_data, format="json")
 
         # Make sure the specified creation date was not used
         # (the datetime should be autoset to the current datetime)
@@ -116,8 +107,9 @@ class ArticleCreationTest(APITestCase):
         """
         article_data = {"name": "Test Article", "content": "This is a test article"}
         self.client.logout()
-        response = self.client.post(
-            "/api/articles/", data=article_data, format="json",
-        )
+        response = self.client.post("/api/articles/", data=article_data, format="json")
 
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert (
+            response.status_code == status.HTTP_401_UNAUTHORIZED
+            or response.status_code == status.HTTP_403_FORBIDDEN
+        )
