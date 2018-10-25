@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Card, Container, Header } from 'semantic-ui-react';
-
+import Cookies from 'js-cookie';
 import * as coreapi from 'coreapi';
 
 import Navbar from './components/Navbar/Navbar';
@@ -35,6 +35,17 @@ class App extends React.Component {
     this.onLogout = this.onLogout.bind(this);
   }
 
+  componentDidMount() {
+    // Set the user from cookie if it exists
+    const userCookie = Cookies.get('user');
+
+    if (userCookie) {
+      this.setState({
+        user: JSON.parse(userCookie),
+      });
+    }
+  }
+
   /**
    * Callback function used to assign a user object to App state
    *
@@ -43,7 +54,7 @@ class App extends React.Component {
   onLogin(user) {
     this.setState({
       user,
-    });
+    }, () => Cookies.set('user', JSON.stringify(user)));
   }
 
   /**
@@ -52,7 +63,7 @@ class App extends React.Component {
   onLogout() {
     this.setState({
       user: null,
-    });
+    }, () => Cookies.remove('user'));
   }
 
   render() {
