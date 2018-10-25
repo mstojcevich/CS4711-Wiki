@@ -23,6 +23,11 @@ function authenticateUser(username, password, onSuccess, onFail) {
     });
     window.client = new coreapi.Client({ auth });
 
+    // Get the new schema (w/ authenticated endpoints)
+    window.client.get('http://localhost:8000/schema/').then((schema) => {
+      window.schema = schema;
+    });
+
     onSuccess(result);
   }).catch((error) => {
     onFail(error.content);

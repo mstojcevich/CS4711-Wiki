@@ -7,6 +7,8 @@ import * as coreapi from 'coreapi';
 import Navbar from './components/Navbar/Navbar';
 import NotFound from './components/NotFound/NotFound';
 import LoginPage from './components/LoginPage/LoginPage';
+import ComposePage from './components/ComposePage/ComposePage';
+import ArticleViewPage from './components/ArticleViewPage/ArticleViewPage';
 
 window.client = new coreapi.Client();
 window.schema = null;
@@ -40,6 +42,17 @@ class App extends React.Component {
     const userCookie = Cookies.get('user');
 
     if (userCookie) {
+      const auth = new coreapi.auth.TokenAuthentication({
+        scheme: 'Token',
+        token: JSON.parse(userCookie).token,
+      });
+      window.client = new coreapi.Client({ auth });
+
+      // Load the schema w/ authenticated endpoints
+      window.client.get('http://localhost:8000/schema/').then((schema) => {
+        window.schema = schema;
+      });
+
       this.setState({
         user: JSON.parse(userCookie),
       });
@@ -80,6 +93,14 @@ class App extends React.Component {
                 <Switch>
                   <Route path="/" exact component={() => <Header as="h1">Home page</Header>} />
                   <Route path="/login" exact component={() => <LoginPage onLogin={this.onLogin} />} />
+                  <Route path="/compose" exact component={() => <ComposePage />} />
+                  <Route
+                    path="/view/:id"
+                    exact
+                    component={
+                      ({ match }) => <ArticleViewPage id={match.params.id} />
+                    }
+                  />
                   <Route
                     path="/profile/:userId"
                     exact
