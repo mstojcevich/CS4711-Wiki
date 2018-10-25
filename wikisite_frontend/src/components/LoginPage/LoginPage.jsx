@@ -71,7 +71,7 @@ class LoginPage extends React.Component {
         });
 
         onLogin(user);
-        history.push('/');
+        history.goBack();
       },
       (failures) => {
         this.setState({
