@@ -8,7 +8,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = Article
-        fields = ('url', 'creation_date', 'name', 'content')
+        fields = ('url', 'id', 'creation_date', 'name', 'content')
 
         extra_kwargs = {
             "creation_date": {
@@ -23,4 +23,4 @@ class ArticleListSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = Article
-        fields = ('url', 'creation_date', 'name')
+        fields = ('url', 'id', 'creation_date', 'name')
