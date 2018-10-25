@@ -110,6 +110,6 @@ class ArticleCreationTest(APITestCase):
         response = self.client.post("/api/articles/", data=article_data, format="json")
 
         assert (
-            response.status_code == status.HTTP_401_UNAUTHORIZED
-            or response.status_code == status.HTTP_403_FORBIDDEN
+            response.status_code == status.HTTP_401_UNAUTHORIZED or
+            response.status_code == status.HTTP_403_FORBIDDEN
         )
