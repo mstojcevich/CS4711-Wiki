@@ -8,6 +8,7 @@ import Navbar from './components/Navbar/Navbar';
 import NotFound from './components/NotFound/NotFound';
 import LoginPage from './components/LoginPage/LoginPage';
 import ComposePage from './components/ComposePage/ComposePage';
+import ArticleViewPage from './components/ArticleViewPage/ArticleViewPage';
 
 window.client = new coreapi.Client();
 window.schema = null;
@@ -93,6 +94,13 @@ class App extends React.Component {
                   <Route path="/" exact component={() => <Header as="h1">Home page</Header>} />
                   <Route path="/login" exact component={() => <LoginPage onLogin={this.onLogin} />} />
                   <Route path="/compose" exact component={() => <ComposePage />} />
+                  <Route
+                    path="/view/:id"
+                    exact
+                    component={
+                      ({ match }) => <ArticleViewPage id={match.params.id} />
+                    }
+                  />
                   <Route
                     path="/profile/:userId"
                     exact

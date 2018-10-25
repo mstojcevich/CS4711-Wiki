@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
-import ComposePage from './ComposePage';
+import ArticleViewPage from './ArticleViewPage';
 
 it.skip('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<Router><ComposePage /></Router>, div);
+  ReactDOM.render(<Router><ArticleViewPage /></Router>, div);
   ReactDOM.unmountComponentAtNode(div);
 });
 
