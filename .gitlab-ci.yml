@@ -40,7 +40,7 @@ audit_backend:
   script:
     - pip install bandit
     - cd wikisite_backend
-    - bandit --skip B101 -r .
+    - bandit --skip B101 -x tests.py -r .
 
 test_frontend:
   script:
