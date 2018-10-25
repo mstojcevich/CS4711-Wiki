@@ -31,10 +31,9 @@ class ArticleViewPage extends React.Component {
         <Header>{title}</Header>
         <ReactQuill
           value={quillDelta}
+          modules={{ toolbar: [] }}
           readOnly
         />
-        <Divider />
-        <Button type="submit">Create article</Button>
       </React.Fragment>
     );
   }
