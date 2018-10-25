@@ -43,7 +43,6 @@ class NavBar extends React.Component {
   }
 
   render() {
-    const { user } = this.props;
     return (
       <Menu fixed="top" inverted>
         <Container>
@@ -60,7 +59,7 @@ class NavBar extends React.Component {
                 />
               </Form>
             </Menu.Item>
-            <UserSection user={user} />
+            <UserSection {...this.props} />
           </Menu.Menu>
         </Container>
       </Menu>
@@ -69,13 +68,17 @@ class NavBar extends React.Component {
 }
 
 function LoggedInUserSection(props) {
-  const { user } = props;
+  const { user, logout } = props;
+
   return (
-    <>
+    <React.Fragment>
       <Menu.Item>
-        <Link to="/profile">{ user.displayName }</Link>
+        <Link to={`/profile/${user.user_id}`}>{ user.displayName }</Link>
       </Menu.Item>
-    </>
+      <Menu.Item>
+        <Link to="/" onClick={logout}>Logout</Link>
+      </Menu.Item>
+    </React.Fragment>
   );
 }
 
@@ -94,11 +97,12 @@ function LoggedOutUserSection() {
 
 function UserSection(props) {
   const { user } = props;
+
   if (user !== null && user !== undefined) {
-    return <LoggedInUserSection user={user} />;
+    return <LoggedInUserSection {...props} />;
   }
 
-  return <LoggedOutUserSection />;
+  return <LoggedOutUserSection {...props} />;
 }
 
 export default withRouter(NavBar);

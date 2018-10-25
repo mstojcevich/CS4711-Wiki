@@ -30,12 +30,28 @@ class App extends React.Component {
     this.state = {
       user: null,
     };
+
     this.onLogin = this.onLogin.bind(this);
+    this.onLogout = this.onLogout.bind(this);
   }
 
+  /**
+   * Callback function used to assign a user object to App state
+   *
+   * @param {object} user information from the API detailing a user
+   */
   onLogin(user) {
     this.setState({
       user,
+    });
+  }
+
+  /**
+   * Callback function used to remove the user object from App state
+   */
+  onLogout() {
+    this.setState({
+      user: null,
     });
   }
 
@@ -46,13 +62,22 @@ class App extends React.Component {
         <Router>
           <React.Fragment>
             {/* Render navbar above router / all pages */}
-            <Navbar user={user} />
+            <Navbar user={user} logout={this.onLogout} />
             {/* Render page based on current URL */}
             <Card fluid>
               <Card.Content>
                 <Switch>
                   <Route path="/" exact component={() => <Header as="h1">Home page</Header>} />
                   <Route path="/login" exact component={() => <LoginPage onLogin={this.onLogin} />} />
+                  <Route
+                    path="/profile/:userId"
+                    exact
+                    component={
+                      ({ match: { params } }) => (
+                        <Header as="h1">Welcome user (id={params.userId})</Header>
+                      )
+                    }
+                  />
                   <Route component={NotFound} />
                 </Switch>
               </Card.Content>
