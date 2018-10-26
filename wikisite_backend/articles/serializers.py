@@ -37,10 +37,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         return instance
 
     def create(self, validated_data):
-        article = Article(
-            name=validated_data["name"],
-            content=validated_data["latest_revision"]["content"],
-        )
+        article = Article(name=validated_data["name"])
         article.save()
 
         user = None

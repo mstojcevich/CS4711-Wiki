@@ -6,13 +6,24 @@ from rest_framework.test import APITestCase
 from articles.models import Article, ArticleRevision
 
 
+def _create_article(name, content):
+    """
+    Create an article in the DB w/ the given title and content
+    """
+    article = Article(name=name)
+    article.save()
+    revision = ArticleRevision(article=article, content=content)
+    revision.save()
+    return article
+
+
 @pytest.mark.django_db
 class ArticleIndexTests(APITestCase):
     def test_one_article(self):
         """
         Ensure that the articles api returns as expected w/ one article.
         """
-        Article.objects.create(name="Test Article", content="This is a test article")
+        _create_article(name="Test Article", content="This is a test article")
 
         response = self.client.get("/api/articles/")
         assert response.status_code == status.HTTP_200_OK
@@ -29,8 +40,8 @@ class ArticleIndexTests(APITestCase):
         """
         If there are multiple articles, they should be ordered by creation time.
         """
-        Article.objects.create(name="Test Article 1", content="This is a test article")
-        Article.objects.create(name="Test Article 2", content="This is a test article")
+        _create_article(name="Test Article 1", content="This is a test article")
+        _create_article(name="Test Article 2", content="This is a test article")
 
         response = self.client.get("/api/articles/")
         assert response.status_code == status.HTTP_200_OK
@@ -42,17 +53,6 @@ class ArticleIndexTests(APITestCase):
 
         second_user = response.data[1]
         assert second_user["name"] == "Test Article 1"
-
-
-def _create_article(name, content):
-    """
-    Create an article in the DB w/ the given title and content
-    """
-    article = Article(name=name, content=content)
-    article.save()
-    revision = ArticleRevision(article=article, content=content)
-    revision.save()
-    return article
 
 
 @pytest.mark.django_db

@@ -9,7 +9,6 @@ class Article(models.Model):
 
     creation_date = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=64, unique=True)
-    content = models.TextField()
 
     @property
     def latest_revision(self):
