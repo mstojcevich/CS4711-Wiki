@@ -20,8 +20,8 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
 
     def update(self, instance, validated_data):
         user = None
-        request = self.context.get('request')
-        if request and hasattr(request, 'user'):
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
             user = request.user
 
         print(repr(validated_data))
@@ -30,26 +30,29 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         revision = ArticleRevision(
             article=instance,
             author=user,
-            content=validated_data['latest_revision']['content']
+            content=validated_data["latest_revision"]["content"],
         )
         revision.save()
 
         return instance
 
     def create(self, validated_data):
-        article = Article(name=validated_data['name'], content=validated_data['latest_revision']['content'])
+        article = Article(
+            name=validated_data["name"],
+            content=validated_data["latest_revision"]["content"],
+        )
         article.save()
 
         user = None
-        request = self.context.get('request')
-        if request and hasattr(request, 'user'):
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
             user = request.user
 
         # Create the first revision for the article
         revision = ArticleRevision(
             article=article,
             author=user,
-            content=validated_data['latest_revision']['content']
+            content=validated_data["latest_revision"]["content"],
         )
         revision.save()
 
