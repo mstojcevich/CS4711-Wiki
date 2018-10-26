@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from articles.models import Article
+from articles.models import Article, ArticleRevision
 
 
 @pytest.mark.django_db
@@ -44,13 +44,24 @@ class ArticleIndexTests(APITestCase):
         assert second_user["name"] == "Test Article 1"
 
 
+def _create_article(name, content):
+    """
+    Create an article in the DB w/ the given title and content
+    """
+    article = Article(name=name, content=content)
+    article.save()
+    revision = ArticleRevision(article=article, content=content)
+    revision.save()
+    return article
+
+
 @pytest.mark.django_db
 class ArticleViewTest(APITestCase):
     def test_view_article(self):
         """
         Ensure that the article view works as expected.
         """
-        Article.objects.create(name="Test Article", content="This is a test article")
+        _create_article(name="Test Article", content="This is a test article")
 
         response = self.client.get("/api/articles/1/")
         assert response.status_code == status.HTTP_200_OK
@@ -131,8 +142,7 @@ class ArticleUpdateTest(APITestCase):
         self.client.force_login(user=self.user)
 
         # Create an article that we're gonna update within the tests
-        self.article = Article(name="Test Article", content="Initial content")
-        self.article.save()
+        self.article = _create_article(name="Test Article", content="Initial content")
         self.article_url = "/api/articles/%d/" % (self.article.id,)
 
     def test_update_article(self):
