@@ -3,7 +3,18 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from articles.models import Article
+from articles.models import Article, ArticleRevision
+
+
+def _create_article(name, content):
+    """
+    Create an article in the DB w/ the given title and content
+    """
+    article = Article(name=name)
+    article.save()
+    revision = ArticleRevision(article=article, content=content)
+    revision.save()
+    return article
 
 
 @pytest.mark.django_db
@@ -12,7 +23,7 @@ class ArticleIndexTests(APITestCase):
         """
         Ensure that the articles api returns as expected w/ one article.
         """
-        Article.objects.create(name="Test Article", content="This is a test article")
+        _create_article(name="Test Article", content="This is a test article")
 
         response = self.client.get("/api/articles/")
         assert response.status_code == status.HTTP_200_OK
@@ -29,8 +40,8 @@ class ArticleIndexTests(APITestCase):
         """
         If there are multiple articles, they should be ordered by creation time.
         """
-        Article.objects.create(name="Test Article 1", content="This is a test article")
-        Article.objects.create(name="Test Article 2", content="This is a test article")
+        _create_article(name="Test Article 1", content="This is a test article")
+        _create_article(name="Test Article 2", content="This is a test article")
 
         response = self.client.get("/api/articles/")
         assert response.status_code == status.HTTP_200_OK
@@ -50,7 +61,7 @@ class ArticleViewTest(APITestCase):
         """
         Ensure that the article view works as expected.
         """
-        Article.objects.create(name="Test Article", content="This is a test article")
+        _create_article(name="Test Article", content="This is a test article")
 
         response = self.client.get("/api/articles/1/")
         assert response.status_code == status.HTTP_200_OK
@@ -59,6 +70,15 @@ class ArticleViewTest(APITestCase):
         assert response_article["name"] == "Test Article"
         assert response_article["content"] == "This is a test article"
         assert "creation_date" in response_article
+
+
+def _get_article(name):
+    """
+    Get an article from the DB by name
+    """
+    article = Article.objects.get(name=name)
+    assert article is not None
+    return {"name": article.name, "content": article.latest_revision.content}
 
 
 @pytest.mark.django_db
@@ -79,10 +99,8 @@ class ArticleCreationTest(APITestCase):
         assert response.status_code == status.HTTP_201_CREATED
 
         # Make sure the article was created in the DB
-        article_exists = Article.objects.filter(
-            name=article_data["name"], content=article_data["content"]
-        ).exists()
-        assert article_exists
+        article = _get_article(article_data["name"])
+        assert article["content"] == article_data["content"]
 
     def test_creation_date_read_only(self):
         """
@@ -113,3 +131,29 @@ class ArticleCreationTest(APITestCase):
             response.status_code == status.HTTP_401_UNAUTHORIZED or
             response.status_code == status.HTTP_403_FORBIDDEN
         )
+
+
+@pytest.mark.django_db
+class ArticleUpdateTest(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="testUser", password="@dequatePassword1"
+        )
+        self.client.force_login(user=self.user)
+
+        # Create an article that we're gonna update within the tests
+        self.article = _create_article(name="Test Article", content="Initial content")
+        self.article_url = "/api/articles/%d/" % (self.article.id,)
+
+    def test_update_article(self):
+        """
+        Test the happy path of updating an article.
+        """
+        article_data = {"name": self.article.name, "content": "This is a test article"}
+        response = self.client.put(self.article_url, data=article_data, format="json")
+
+        assert response.status_code == status.HTTP_200_OK
+
+        # Make sure the article was updated in the DB
+        db_article = _get_article(self.article.name)
+        assert db_article["content"] == article_data["content"]
