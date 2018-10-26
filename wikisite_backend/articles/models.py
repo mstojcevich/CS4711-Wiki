@@ -15,6 +15,9 @@ class Article(models.Model):
     def latest_revision(self):
         return self.articlerevision_set.latest('id')
 
+    def __str__(self):
+        return self.name
+
 
 class ArticleRevision(models.Model):
     """
