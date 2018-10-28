@@ -95,7 +95,7 @@ class App extends React.Component {
                   <Route path="/login" exact component={() => <LoginPage onLogin={this.onLogin} />} />
                   <Route path="/compose" exact component={() => <ComposePage />} />
                   <Route
-                    path="/view/:id"
+                    path="/articles/:id"
                     exact
                     component={
                       ({ match }) => <ArticleViewPage id={match.params.id} />
