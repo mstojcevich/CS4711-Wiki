@@ -2,17 +2,12 @@ import React from 'react';
 import * as coreapi from 'coreapi';
 import Cookies from 'js-cookie';
 
+import requestFunctions from './APIRequests';
+
 const API_URL = 'http://localhost:8000/';
 const SCHEMA_URL = `${API_URL}schema/`;
 
 const API_CONTEXT = React.createContext({});
-
-const getInitState = () => ({
-  client: new coreapi.Client(),
-  schema: null,
-  user: null,
-  loading: false,
-});
 
 /**
  * Provide a react component with props that help you use the API
@@ -41,29 +36,88 @@ export const withAPI = Component => (
       <Consumer>
         { ({
           isLoading,
+          isLoggedIn,
           user,
           login,
           logout,
-        }) => (
-          <Component
-            isLoading={isLoading}
-            user={user}
-            login={login}
-            logout={logout}
-            {...props}
-          />
-        )
+          requests,
+        }) => (!isLoading
+          ? (
+            <Component
+              isLoading={isLoading}
+              isLoggedIn={isLoggedIn}
+              user={user}
+              login={login}
+              logout={logout}
+              requests={requests}
+              {...props}
+            />
+          ) : null)
         }
       </Consumer>
     );
   }
 );
 
+/**
+ * Take all api request functions in APIRequests, plug in coreapi client and schema,
+ * return them as an object
+ *
+ * @param {Object} client see coreapi documentation
+ * @param {Object} schema see coreapi documentation
+ *
+ * @return {Object} keys named after functions that represent API requests
+ */
+const mapFunctionsToCoreAPI = (client, schema) => {
+  const requests = {};
+
+  requestFunctions.forEach((f) => {
+    if (typeof f === 'function') {
+      requests[f.name] = true
+        ? params => (
+          f(client, schema, params)
+        )
+        : () => (
+          new Promise(
+            () => { throw new Error('Client not initialized'); },
+            () => { throw new Error('Client not initialized'); },
+          )
+        );
+    }
+  });
+
+  return requests;
+};
+
+/**
+ * Generate an object containing the initial state for APIHandler
+ *
+ * @return {Object} state object, see return val
+ */
+const getInitState = () => ({
+  client: new coreapi.Client(),
+  schema: null,
+  user: null,
+  loading: true,
+  requests: {},
+});
+
+/**
+ * Store all boilerplate logic for accessing coreapi, save results in own state
+ */
 export default class APIHandler extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = getInitState();
+    const preState = getInitState();
+    this.state = {
+      ...preState,
+      requests: mapFunctionsToCoreAPI(
+        preState.client,
+        preState.schema,
+      ),
+    };
+
     this.loadAuthFromAPI = this.loadAuthFromAPI.bind(this);
     this.removeAuth = this.removeAuth.bind(this);
     this.checkAuthentication = this.checkAuthentication.bind(this);
@@ -75,12 +129,31 @@ export default class APIHandler extends React.Component {
     this.setLoading(this.loadAuthFromCookie());
   }
 
-  // Trigger loading in state and then optionally perform callback function
+  /**
+   * Trigger loading in state and then optionally perform callback function
+   *
+   * @param {Function} callback will be called after updating loading state
+   */
   setLoading(callback = () => {}) {
     this.setState({ loading: true }, callback);
   }
 
-  // End loading in state and then optionally perform callback function
+  /**
+   * Take all api request functions in APIRequests, plug in coreapi client and schema,
+   * put them in the state requests property
+   */
+  mapRequestsToClient() {
+    const { client, schema } = this.state;
+    const requests = mapFunctionsToCoreAPI(client, schema);
+
+    this.setState({ requests }, this.clearLoading);
+  }
+
+  /**
+   * End loading in state and then optionally perform callback function
+   *
+   * @param {Function} callback will be called after updating loading state
+   */
   clearLoading(callback = () => {}) {
     this.setState({ loading: false }, callback);
   }
@@ -124,8 +197,11 @@ export default class APIHandler extends React.Component {
               // Save the user information in a cookie
               Cookies.set('user', JSON.stringify(user));
 
+              // Update available requests
+              this.mapRequestsToClient();
+
               // Call the success callback function
-              this.clearLoading(onSuccess(user));
+              onSuccess(user);
             });
           }).catch(error => this.clearLoading(onFail(error.content)));
         });
@@ -159,7 +235,7 @@ export default class APIHandler extends React.Component {
           this.setState({
             schema,
             user: JSON.parse(userCookie),
-          }, this.clearLoading);
+          }, this.mapRequestsToClient);
         });
       });
     } else {
@@ -169,7 +245,7 @@ export default class APIHandler extends React.Component {
         this.setState({
           ...getInitState(),
           schema,
-        }, this.clearLoading);
+        }, this.mapRequestsToClient);
       });
     }
   }
@@ -193,11 +269,11 @@ export default class APIHandler extends React.Component {
    * on
    */
   checkAuthentication() {
-    const { user, isLoading } = this.state;
+    const { user, loading } = this.state;
 
     return (
-      user !== null,
-      isLoading === false
+      user !== null
+      && loading === false
     );
   }
 
@@ -205,6 +281,7 @@ export default class APIHandler extends React.Component {
     const {
       loading,
       user,
+      requests,
     } = this.state;
     const { children } = this.props;
     const { Provider } = API_CONTEXT;
@@ -217,6 +294,7 @@ export default class APIHandler extends React.Component {
         user,
         login: this.loadAuthFromAPI,
         logout: this.removeAuth,
+        requests,
       }}
       >
         {Child}

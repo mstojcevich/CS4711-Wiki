@@ -7,6 +7,8 @@ import {
   Form, Button, Divider, Message,
 } from 'semantic-ui-react';
 
+import { withAPI } from '../APIHandler/APIHandler';
+
 class ComposePage extends React.Component {
   constructor(props) {
     super(props);
@@ -27,16 +29,18 @@ class ComposePage extends React.Component {
   }
 
   onArticleSubmit() {
+    const { requests } = this.props;
     const { title, quillDelta } = this.state;
 
-    const action = ['api', 'articles', 'create'];
-    const params = { name: title, content: JSON.stringify(quillDelta) };
-    window.client.action(window.schema, action, params).then((response) => {
-      // Navigate to the view page
-      this.setState({ destinationId: response.id });
-    }).catch((error) => {
+    requests.createArticle({
+      name: title,
+      content: JSON.stringify(quillDelta),
+    }).then(response => (
+      this.setState({ destinationId: response })
+    )).catch((error) => {
       const failures = error.content;
       console.error(failures);
+
       this.setState({
         titleProblems: failures.name || [],
         contentProblems: failures.content || [],
@@ -54,13 +58,27 @@ class ComposePage extends React.Component {
   }
 
   render() {
-    const { text, destinationId } = this.state;
-    const { genericProblems, titleProblems, contentProblems } = this.state;
-    if (destinationId !== null) {
+    const { isLoggedIn } = this.props;
+    const {
+      text,
+      destinationId,
+      genericProblems,
+      titleProblems,
+      contentProblems,
+    } = this.state;
+
+    if (!isLoggedIn()) {
       return (
-        <Redirect to={`/view/${destinationId}`} />
+        <Redirect to="/" />
       );
     }
+
+    if (destinationId !== null) {
+      return (
+        <Redirect to={`/articles/${destinationId}`} />
+      );
+    }
+
     return (
       <React.Fragment>
         <Message
@@ -99,4 +117,4 @@ class ComposePage extends React.Component {
   }
 }
 
-export default withRouter(ComposePage);
+export default withAPI(withRouter(ComposePage));
