@@ -1,38 +1,8 @@
 import React from 'react';
 import { Form, Button, Message } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
-import * as coreapi from 'coreapi';
 
-/**
- * Authenticate a user with a specified username and password
- *
- * @param onSuccess Function to be called on successful login,
- *  called w/ object argument of format {username: ..., uid: ..., ...: ...}
- * @param onFail Function to be called on unsuccessful login,
- *  called w/ an object of the format {username: list of problems as strings,
- *                                     password: list of problems as strings}
- */
-function authenticateUser(username, password, onSuccess, onFail) {
-  const action = ['api-token-auth', 'create'];
-  const params = { username, password };
-
-  window.client.action(window.schema, action, params).then((result) => {
-    const auth = new coreapi.auth.TokenAuthentication({
-      scheme: 'Token',
-      token: result.token,
-    });
-    window.client = new coreapi.Client({ auth });
-
-    // Get the new schema (w/ authenticated endpoints)
-    window.client.get('http://localhost:8000/schema/').then((schema) => {
-      window.schema = schema;
-    });
-
-    onSuccess(result);
-  }).catch((error) => {
-    onFail(error.content);
-  });
-}
+import { withAPI } from '../APIHandler/APIHandler';
 
 /**
  * LoginPage component
@@ -61,22 +31,17 @@ class LoginPage extends React.Component {
    */
   onLoginSubmit() {
     const { username, password } = this.state;
-    const { onLogin, history } = this.props;
+    const { login, history } = this.props;
 
-    authenticateUser(
-      username, password,
-      (user) => {
-        const authedUser = user;
-        authedUser.displayName = user.username;
-
+    login(
+      username,
+      password,
+      () => {
         this.setState({
           usernameProblems: [],
           passwordProblems: [],
           genericProblems: [],
-        });
-
-        onLogin(user);
-        history.goBack();
+        }, () => history.goBack());
       },
       (failures) => {
         this.setState({
@@ -151,4 +116,4 @@ class LoginPage extends React.Component {
   }
 }
 
-export default withRouter(LoginPage);
+export default withAPI(withRouter(LoginPage));
