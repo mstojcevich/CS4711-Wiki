@@ -35,12 +35,12 @@ export const withAPI = Component => (
     return (
       <Consumer>
         { ({
-          isLoading,
-          isLoggedIn,
-          user,
-          login,
-          logout,
-          requests,
+          isLoading, // {Boolean} is the APIHandler loading?
+          isLoggedIn, // {Function} check if there is a logged in user on the page
+          user, // {Object} user details
+          login, // {Function} see loadAuthFromAPI function in this file
+          logout, // {Function} see removeAuth function in this file
+          requests, // {Object} API request functions defined in ./APIRequests.js
         }) => (!isLoading
           ? (
             <Component
