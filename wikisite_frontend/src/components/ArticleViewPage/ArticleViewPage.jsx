@@ -4,39 +4,57 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Header } from 'semantic-ui-react';
 
+import { withAPI } from '../APIHandler/APIHandler';
+
 class ArticleViewPage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { title: 'Loading...', quillDelta: 'Loading...' };
+    this.state = {
+      title: 'Loading...',
+      quillDelta: 'Loading...',
+    };
+  }
 
-    // TODO: this is terrible, I'm sorry
-    setTimeout(() => {
-      const action = ['api', 'articles', 'read'];
-      const params = { id: props.id };
-      window.client.action(window.schema, action, params).then((response) => {
-        console.log(response);
-        this.setState({
-          title: response.name,
-          quillDelta: JSON.parse(response.content),
-        });
-      });
-    }, 0.1);
+  componentDidMount() {
+    this.requestArticleContent();
+  }
+
+  componentDidUpdate(prevProps) {
+    const { id } = this.props;
+
+    if (id !== prevProps.id) {
+      this.requestArticleContent();
+    }
+  }
+
+  requestArticleContent() {
+    const { requests, id } = this.props;
+
+    requests.getArticle({ id }).then((response) => {
+      this.setState(response);
+    }).catch(() => this.setState({
+      title: 'Could not retrieve article',
+      quillDelta: null,
+    }));
   }
 
   render() {
     const { title, quillDelta } = this.state;
+
     return (
       <React.Fragment>
         <Header>{title}</Header>
-        <ReactQuill
-          value={quillDelta}
-          modules={{ toolbar: false }}
-          readOnly
-        />
+        {quillDelta !== null && (
+          <ReactQuill
+            value={quillDelta}
+            modules={{ toolbar: false }}
+            readOnly
+          />
+        )}
       </React.Fragment>
     );
   }
 }
 
-export default withRouter(ArticleViewPage);
+export default withAPI(withRouter(ArticleViewPage));

@@ -2,6 +2,8 @@ import React from 'react';
 import { Menu, Container, Form } from 'semantic-ui-react';
 import { Link, withRouter } from 'react-router-dom';
 
+import { withAPI } from '../APIHandler/APIHandler';
+
 /**
  * NavBar component
  *
@@ -73,7 +75,7 @@ function LoggedInUserSection(props) {
   return (
     <React.Fragment>
       <Menu.Item>
-        <Link to={`/profile/${user.user_id}`}>{ user.displayName }</Link>
+        <Link to={`/profile/${user.user_id}`}>{ user.username }</Link>
       </Menu.Item>
       <Menu.Item>
         <Link to="/" onClick={logout}>Logout</Link>
@@ -98,11 +100,11 @@ function LoggedOutUserSection() {
 function UserSection(props) {
   const { user } = props;
 
-  if (user !== null && user !== undefined) {
+  if (user != null) {
     return <LoggedInUserSection {...props} />;
   }
 
   return <LoggedOutUserSection {...props} />;
 }
 
-export default withRouter(NavBar);
+export default withAPI(withRouter(NavBar));
