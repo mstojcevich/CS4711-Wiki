@@ -236,7 +236,7 @@ export default class APIHandler extends React.Component {
             schema,
             user: JSON.parse(userCookie),
           }, this.mapRequestsToClient);
-        });
+        }).catch(error => this.clearLoading(console.error(error.content)));
       });
     } else {
       const { client } = this.state;
@@ -246,7 +246,7 @@ export default class APIHandler extends React.Component {
           ...getInitState(),
           schema,
         }, this.mapRequestsToClient);
-      });
+      }).catch(error => this.clearLoading(console.error(error.content)));
     }
   }
 

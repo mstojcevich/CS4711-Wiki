@@ -6,6 +6,7 @@ import APIHandler from './components/APIHandler/APIHandler';
 import Navbar from './components/Navbar/Navbar';
 import NotFound from './components/NotFound/NotFound';
 import LoginPage from './components/LoginPage/LoginPage';
+import HomePage from './components/HomePage/HomePage';
 import ComposePage from './components/ComposePage/ComposePage';
 import ArticleViewPage from './components/ArticleViewPage/ArticleViewPage';
 
@@ -33,7 +34,7 @@ class App extends React.Component {
               <Card fluid>
                 <Card.Content>
                   <Switch>
-                    <Route path="/" exact component={() => <Header as="h1">Home page</Header>} />
+                    <Route path="/" exact component={() => <HomePage />} />
                     <Route path="/login" exact component={() => <LoginPage onLogin={this.onLogin} />} />
                     <Route path="/compose" exact component={() => <ComposePage />} />
                     <Route
