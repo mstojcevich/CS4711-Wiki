@@ -37,6 +37,41 @@ function getArticle(client, schema, params) {
   })).catch(error => error);
 }
 
+/**
+ * Get a list of articles from the API
+ *
+ * @param {Object} client coreAPI client, supplied by APIHandler
+ * @param {Object} schema coreAPI schema, supplied by APIHandler
+ *
+ * @return {Array}
+ * [
+ *   {
+ *      title: {string} title of the article,
+ *      link: {string} a link to the article that can be resolved by the UI,
+ *      id: {number} the id of the article
+ *      creation_date: {string} iso8601 datestring of the article's creation time
+ *   }
+ * ]
+ */
+function getArticles(client, schema) {
+  const action = ['api', 'articles', 'list'];
+
+  return client.action(
+    schema,
+    action,
+  ).then(response => response).catch(console.error);
+}
+
+/**
+ * Create a new article as an authenticated user
+ * @param {Object} client coreAPI client, supplied by APIHandler
+ * @param {Object} schema coreAPI schema, supplied by APIHandler
+ * @param {Object} params article content formatted as quill data
+ * {
+ *    name: {string} article title,
+ *    content: {object} quill data object that has article content and formatting
+ * }
+ */
 function createArticle(client, schema, params) {
   const action = ['api', 'articles', 'create'];
 
@@ -46,11 +81,12 @@ function createArticle(client, schema, params) {
     params,
   ).then(response => (
     response.id
-  )).catch(error => error);
+  )).catch(console.error);
 }
 
 const requests = [
   getArticle,
+  getArticles,
   createArticle,
 ];
 

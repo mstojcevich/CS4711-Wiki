@@ -9,6 +9,9 @@
     },
     "react/prop-types": {
       "enabled": 0
+    },
+    "import/prefer-default-export": {
+      "enabled": 0
     }
   },
   "env": {
