@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 
 import requestFunctions from './APIRequests';
 
-const API_URL = 'http://localhost:8000/';
+const API_URL = 'https://cs4711-team3-wiki.herokuapp.com/';
 const SCHEMA_URL = `${API_URL}schema/`;
 
 const API_CONTEXT = React.createContext({});
