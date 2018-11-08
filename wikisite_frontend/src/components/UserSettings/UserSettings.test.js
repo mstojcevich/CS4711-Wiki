@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import NotFound from './NotFound';
+import NotFound from './UserSettings';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<NotFound />, div);
+  ReactDOM.render(<UserSettings />, div);
   ReactDOM.unmountComponentAtNode(div);
 });
