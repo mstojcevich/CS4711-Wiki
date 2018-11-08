@@ -27,14 +27,18 @@
 function getArticle(client, schema, params) {
   const action = ['api', 'articles', 'read'];
 
-  return client.action(
-    schema,
-    action,
-    params,
-  ).then(response => ({
-    title: response.name,
-    quillDelta: JSON.parse(response.content),
-  })).catch(error => error);
+  try {
+    return client.action(
+      schema,
+      action,
+      params,
+    ).then(response => ({
+      title: response.name,
+      quillDelta: JSON.parse(response.content),
+    })).catch(error => error);
+  } catch (e) {
+    return new Promise((resolve, reject) => reject(e));
+  }
 }
 
 /**
@@ -56,10 +60,14 @@ function getArticle(client, schema, params) {
 function getArticles(client, schema) {
   const action = ['api', 'articles', 'list'];
 
-  return client.action(
-    schema,
-    action,
-  ).then(response => response).catch(console.error);
+  try {
+    return client.action(
+      schema,
+      action,
+    ).then(response => response).catch(console.error);
+  } catch (e) {
+    return new Promise((resolve, reject) => reject(e));
+  }
 }
 
 /**
@@ -75,13 +83,17 @@ function getArticles(client, schema) {
 function createArticle(client, schema, params) {
   const action = ['api', 'articles', 'create'];
 
-  return client.action(
-    schema,
-    action,
-    params,
-  ).then(response => (
-    response.id
-  )).catch(console.error);
+  try {
+    return client.action(
+      schema,
+      action,
+      params,
+    ).then(response => (
+      response.id
+    )).catch(console.error);
+  } catch (e) {
+    return new Promise((resolve, reject) => reject(e));
+  }
 }
 
 const requests = [
