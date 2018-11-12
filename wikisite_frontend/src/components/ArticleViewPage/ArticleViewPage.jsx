@@ -2,7 +2,7 @@ import 'react-quill/dist/quill.snow.css';
 import ReactQuill from 'react-quill';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Header, Button, Divider } from 'semantic-ui-react';
+import { Header, Button, Divider, Grid, Icon } from 'semantic-ui-react';
 
 import { withAPI } from '../APIHandler/APIHandler';
 
@@ -44,15 +44,21 @@ class ArticleViewPage extends React.Component {
 
     return (
       <React.Fragment>
-        <Header as="h2">
-          {title}
-          <Header.Subheader>
-            Last updated 3 hours ago by marcusant
-          </Header.Subheader>
-        </Header>
-        <Button.Group>
-          <Button compact>History</Button>
-        </Button.Group>
+        <Grid columns="equal">
+          <Grid.Column>
+            <Header as="h2">
+              {title}
+              <Header.Subheader>
+                Last updated 3 hours ago by marcusant
+              </Header.Subheader>
+            </Header>
+          </Grid.Column>
+          <Grid.Column className="right aligned">
+            <Button.Group>
+              <Button compact><Icon name="history" />History</Button>
+            </Button.Group>
+          </Grid.Column>
+        </Grid>
         <Divider />
         {quillDelta !== null && (
           <ReactQuill
