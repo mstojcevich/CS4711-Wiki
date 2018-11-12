@@ -185,8 +185,9 @@ export default class APIHandler extends React.Component {
         this.setState({
           client: new coreapi.Client({ auth }),
         }, () => {
+          const { client: clientAfterUpdate } = this.state;
           // Get the new schema (w/ authenticated endpoints),
-          client.get(SCHEMA_URL).then((newSchema) => {
+          clientAfterUpdate.get(SCHEMA_URL).then((newSchema) => {
             // Save the schema and user in state,
             this.setState({
               schema: newSchema,
@@ -228,10 +229,10 @@ export default class APIHandler extends React.Component {
       this.setState({
         client: new coreapi.Client({ auth }),
       }, () => {
-        const { client } = this.state;
+        const { client: clientAfterUpdate } = this.state;
 
         // Load the schema w/ authenticated endpoints
-        client.get(SCHEMA_URL).then((schema) => {
+        clientAfterUpdate.get(SCHEMA_URL).then((schema) => {
           this.setState({
             schema,
             user: JSON.parse(userCookie),
@@ -239,6 +240,7 @@ export default class APIHandler extends React.Component {
         }).catch(error => this.clearLoading(console.error(error.content)));
       });
     } else {
+      // The user has no cookie, re-initialize state
       const { client } = this.state;
 
       client.get(SCHEMA_URL).then((schema) => {
