@@ -90,7 +90,7 @@ function createArticle(client, schema, params) {
       params,
     ).then(response => (
       response.id
-    )).catch(console.error);
+    ));
   } catch (e) {
     return new Promise((resolve, reject) => reject(e));
   }
