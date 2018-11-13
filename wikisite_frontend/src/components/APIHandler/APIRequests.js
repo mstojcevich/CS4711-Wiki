@@ -35,6 +35,7 @@ function getArticle(client, schema, params) {
     ).then(response => ({
       title: response.name,
       quillDelta: JSON.parse(response.content),
+      history: response.revisions,
     })).catch(error => error);
   } catch (e) {
     return new Promise((resolve, reject) => reject(e));

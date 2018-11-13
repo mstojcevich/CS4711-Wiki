@@ -14,6 +14,7 @@ class ArticleViewPage extends React.Component {
     this.state = {
       title: 'Loading...',
       quillDelta: 'Loading...',
+      history: [],
     };
 
     this.loadRevision = this.loadRevision.bind(this);
@@ -54,7 +55,7 @@ class ArticleViewPage extends React.Component {
   }
 
   render() {
-    const { title, quillDelta } = this.state;
+    const { title, quillDelta, history } = this.state;
 
     return (
       <React.Fragment>
@@ -71,19 +72,7 @@ class ArticleViewPage extends React.Component {
             <Button.Group>
               <ArticleHistoryButton
                 onSelect={this.loadRevision}
-                revisions={
-                  [
-                    {
-                      url: 'http://localhost:8000/api/article-revisions/7/',
-                      author: 'marcusant',
-                      creation_date: '11/5/2018 5:00pm',
-                    },
-                    {
-                      author: 'test',
-                      creation_date: '11/5/2018 5:30pm',
-                    },
-                  ]
-                }
+                revisions={history}
               />
             </Button.Group>
           </Grid.Column>

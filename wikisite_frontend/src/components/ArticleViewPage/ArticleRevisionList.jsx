@@ -19,13 +19,14 @@ class ArticleRevisionList extends React.Component {
 
     revisions.forEach((revision) => {
       const revisionDate = formatDate(revision.creation_date);
+      const authorName = revision.author ? revision.author.username : 'anonymous';
       links.push(
         <List.Item
           as="a"
           onClick={() => { onSelect(revision); }}
-          key={`${revisionDate}_${revision.author}`}
+          key={`${revisionDate}_${authorName}`}
         >
-          {revisionDate} by {revision.author}
+          {revisionDate} by {authorName}
         </List.Item>,
       );
     });
