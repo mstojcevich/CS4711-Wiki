@@ -11,7 +11,9 @@ describe('ArticleRevisionList', () => {
   describe('With one revision', () => {
     const revisions = [
       {
-        author: 'marcusant',
+        author: {
+          username: 'marcusant',
+        },
         creation_date: '2018-10-28T19:34:45.883651Z',
       },
     ];
@@ -27,7 +29,7 @@ describe('ArticleRevisionList', () => {
     });
 
     it('Contains the username', () => {
-      expect(entry.text()).toContain(revisions[0].author);
+      expect(entry.text()).toContain(revisions[0].author.username);
     });
 
     it('Formats the date', () => {
