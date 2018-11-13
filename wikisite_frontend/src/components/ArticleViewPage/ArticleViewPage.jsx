@@ -11,6 +11,7 @@ import {
 
 import { withAPI } from '../APIHandler/APIHandler';
 import ArticleHistoryButton from './ArticleHistoryButton';
+import { formatDate } from '../../util';
 
 class ArticleViewPage extends React.Component {
   constructor(props) {
@@ -19,7 +20,10 @@ class ArticleViewPage extends React.Component {
     this.state = {
       title: 'Loading...',
       quillDelta: 'Loading...',
+      history: [],
     };
+
+    this.loadRevision = this.loadRevision.bind(this);
   }
 
   componentDidMount() {
@@ -45,8 +49,23 @@ class ArticleViewPage extends React.Component {
     }));
   }
 
+  loadRevision(revision) {
+    const { requests } = this.props;
+
+    // Load the revision page
+    requests.getRevision(revision.url).then((detailedRevision) => {
+      this.setState({ quillDelta: detailedRevision.quillDelta });
+    }).catch((err) => {
+      console.error(err);
+    });
+  }
+
   render() {
-    const { title, quillDelta } = this.state;
+    const { title, quillDelta, history } = this.state;
+
+    const lastModify = history ? history[history.length - 1] : null;
+    const lastModifyDate = lastModify ? formatDate(lastModify.creation_date) : 'unknown';
+    const lastModifyUser = lastModify ? lastModify.author.username : 'unknown';
 
     return (
       <React.Fragment>
@@ -55,24 +74,15 @@ class ArticleViewPage extends React.Component {
             <Header as="h2">
               {title}
               <Header.Subheader>
-                Last updated 3 hours ago by marcusant
+                Last updated {lastModifyDate} by {lastModifyUser}
               </Header.Subheader>
             </Header>
           </Grid.Column>
           <Grid.Column className="right aligned">
             <Button.Group>
-              <ArticleHistoryButton revisions={
-                [
-                  {
-                    author: 'marcusant',
-                    creation_date: '11/5/2018 5:00pm',
-                  },
-                  {
-                    author: 'test',
-                    creation_date: '11/5/2018 5:30pm',
-                  },
-                ]
-              }
+              <ArticleHistoryButton
+                onSelect={this.loadRevision}
+                revisions={history}
               />
             </Button.Group>
           </Grid.Column>

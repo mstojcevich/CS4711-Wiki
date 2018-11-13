@@ -35,6 +35,25 @@ function getArticle(client, schema, params) {
     ).then(response => ({
       title: response.name,
       quillDelta: JSON.parse(response.content),
+      history: response.revisions,
+    })).catch(error => error);
+  } catch (e) {
+    return new Promise((resolve, reject) => reject(e));
+  }
+}
+
+/**
+ * Get the contents of an article revision
+ *
+ * @param {Object} client coreAPI client, supplied by APIHandler
+ * @param {String} revisionURL URL for the article revision, as given by the API
+ */
+function getRevision(client, schema, revisionURL) {
+  try {
+    return client.get(
+      revisionURL,
+    ).then(response => ({
+      quillDelta: JSON.parse(response.content),
     })).catch(error => error);
   } catch (e) {
     return new Promise((resolve, reject) => reject(e));
@@ -100,6 +119,7 @@ const requests = [
   getArticle,
   getArticles,
   createArticle,
+  getRevision,
 ];
 
 export default requests;

@@ -8,7 +8,7 @@ import ArticleRevisionList from './ArticleRevisionList';
  */
 class ArticleHistoryButton extends React.Component {
   render() {
-    const { revisions } = this.props;
+    const { revisions, onSelect } = this.props;
 
     return (
       <Popup
@@ -17,7 +17,7 @@ class ArticleHistoryButton extends React.Component {
         trigger={<Button compact><Icon name="history" />History</Button>}
       >
         <Popup.Content>
-          <ArticleRevisionList revisions={revisions} />
+          <ArticleRevisionList revisions={revisions} onSelect={onSelect} />
         </Popup.Content>
       </Popup>
     );
