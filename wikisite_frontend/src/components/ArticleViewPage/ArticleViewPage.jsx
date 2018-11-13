@@ -60,7 +60,11 @@ class ArticleViewPage extends React.Component {
                 [
                   {
                     author: 'marcusant',
-                    creation_date: '11/5/2018 5pm',
+                    creation_date: '11/5/2018 5:00pm',
+                  },
+                  {
+                    author: 'test',
+                    creation_date: '11/5/2018 5:30pm',
                   },
                 ]
               }
