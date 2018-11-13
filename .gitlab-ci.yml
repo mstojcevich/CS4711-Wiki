@@ -39,8 +39,7 @@ lint_frontend:
   script:
     - cd wikisite_frontend
     - npm install
-    - npm install -g eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-import
-    - eslint src/
+    - ./node_modules/.bin/eslint src/
 
 test_frontend:
   script:

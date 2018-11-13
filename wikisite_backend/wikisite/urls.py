@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 
-from articles.views import ArticleViewSet
+from articles.views import ArticleViewSet, ArticleRevisionViewSet
 from users.views import UserViewSet
 from rest_framework.schemas import get_schema_view
 from django.conf.urls.static import static
@@ -27,6 +27,7 @@ from wikisite.views import ObtainAuthToken
 api_router = routers.DefaultRouter()
 api_router.register(r"users", UserViewSet)
 api_router.register(r"articles", ArticleViewSet)
+api_router.register(r"article-revisions", ArticleRevisionViewSet)
 
 schema_view = get_schema_view(title='Wiki API', renderer_classes=[CoreJSONRenderer])
 
