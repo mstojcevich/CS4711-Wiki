@@ -3,31 +3,42 @@ import React from 'react';
 import { List } from 'semantic-ui-react';
 import { formatDate } from '../../util';
 
-function createLinks(revisions) {
-  const links = [];
-
-  revisions.forEach((revision) => {
-    const revisionDate = formatDate(revision.creation_date);
-    links.push(
-      <List.Item as="a" key={`${revisionDate}_${revision.author}`}>
-        {revisionDate} by {revision.author}
-      </List.Item>,
-    );
-  });
-
-  return links;
-}
-
 /**
  * Renders a list of article revisions
  */
 class ArticleRevisionList extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.createLinks = this.createLinks.bind(this);
+  }
+
+  createLinks() {
+    const { revisions, onSelect } = this.props;
+    const links = [];
+
+    revisions.forEach((revision) => {
+      const revisionDate = formatDate(revision.creation_date);
+      links.push(
+        <List.Item
+          as="a"
+          onClick={() => { onSelect(revision); }}
+          key={`${revisionDate}_${revision.author}`}
+        >
+          {revisionDate} by {revision.author}
+        </List.Item>,
+      );
+    });
+
+    return links;
+  }
+
   render() {
-    const { revisions } = this.props;
+    const { revisions, onSelect } = this.props;
 
     return (
       <List link>
-        {createLinks(revisions)}
+        {this.createLinks(revisions, onSelect)}
       </List>
     );
   }

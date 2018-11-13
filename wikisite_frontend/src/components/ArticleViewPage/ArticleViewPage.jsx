@@ -2,7 +2,7 @@ import 'react-quill/dist/quill.snow.css';
 import ReactQuill from 'react-quill';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Header, Button, Divider, Grid, Icon } from 'semantic-ui-react';
+import { Header, Button, Divider, Grid } from 'semantic-ui-react';
 
 import { withAPI } from '../APIHandler/APIHandler';
 import ArticleHistoryButton from './ArticleHistoryButton';
@@ -15,6 +15,8 @@ class ArticleViewPage extends React.Component {
       title: 'Loading...',
       quillDelta: 'Loading...',
     };
+
+    this.loadRevision = this.loadRevision.bind(this);
   }
 
   componentDidMount() {
@@ -40,6 +42,17 @@ class ArticleViewPage extends React.Component {
     }));
   }
 
+  loadRevision(revision) {
+    const { requests } = this.props;
+
+    // Load the revision page
+    requests.getRevision(revision.url).then((detailedRevision) => {
+      this.setState({ quillDelta: detailedRevision.quillDelta });
+    }).catch((err) => {
+      console.error(err);
+    });
+  }
+
   render() {
     const { title, quillDelta } = this.state;
 
@@ -56,18 +69,21 @@ class ArticleViewPage extends React.Component {
           </Grid.Column>
           <Grid.Column className="right aligned">
             <Button.Group>
-              <ArticleHistoryButton revisions={
-                [
-                  {
-                    author: 'marcusant',
-                    creation_date: '11/5/2018 5:00pm',
-                  },
-                  {
-                    author: 'test',
-                    creation_date: '11/5/2018 5:30pm',
-                  },
-                ]
-              }
+              <ArticleHistoryButton
+                onSelect={this.loadRevision}
+                revisions={
+                  [
+                    {
+                      url: 'http://localhost:8000/api/article-revisions/7/',
+                      author: 'marcusant',
+                      creation_date: '11/5/2018 5:00pm',
+                    },
+                    {
+                      author: 'test',
+                      creation_date: '11/5/2018 5:30pm',
+                    },
+                  ]
+                }
               />
             </Button.Group>
           </Grid.Column>
