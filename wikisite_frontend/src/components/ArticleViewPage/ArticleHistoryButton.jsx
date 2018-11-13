@@ -1,6 +1,5 @@
 import 'react-quill/dist/quill.snow.css';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
 import { Button, Icon, Popup } from 'semantic-ui-react';
 import ArticleRevisionList from './ArticleRevisionList';
 
@@ -25,4 +24,4 @@ class ArticleHistoryButton extends React.Component {
   }
 }
 
-export default withRouter(ArticleHistoryButton);
+export default ArticleHistoryButton;

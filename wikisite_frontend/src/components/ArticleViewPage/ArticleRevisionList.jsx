@@ -1,15 +1,16 @@
 import 'react-quill/dist/quill.snow.css';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
 import { List } from 'semantic-ui-react';
+import { formatDate } from '../../util';
 
 function createLinks(revisions) {
   const links = [];
 
   revisions.forEach((revision) => {
+    const revisionDate = formatDate(revision.creation_date);
     links.push(
-      <List.Item as="a">
-        {revision.creation_date} by {revision.author}
+      <List.Item as="a" key={`${revisionDate}_${revision.author}`}>
+        {revisionDate} by {revision.author}
       </List.Item>,
     );
   });
@@ -32,4 +33,4 @@ class ArticleRevisionList extends React.Component {
   }
 }
 
-export default withRouter(ArticleRevisionList);
+export default ArticleRevisionList;
