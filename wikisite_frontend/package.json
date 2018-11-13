@@ -29,7 +29,6 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "proxy": "https://cs4711-team3-wiki.herokuapp.com/api/",
   "devDependencies": {
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.7.0",
