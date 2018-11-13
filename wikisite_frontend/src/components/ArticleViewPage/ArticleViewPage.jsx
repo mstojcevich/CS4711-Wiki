@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { Header, Button, Divider, Grid, Icon } from 'semantic-ui-react';
 
 import { withAPI } from '../APIHandler/APIHandler';
+import ArticleHistoryButton from './ArticleHistoryButton';
 
 class ArticleViewPage extends React.Component {
   constructor(props) {
@@ -55,7 +56,15 @@ class ArticleViewPage extends React.Component {
           </Grid.Column>
           <Grid.Column className="right aligned">
             <Button.Group>
-              <Button compact><Icon name="history" />History</Button>
+              <ArticleHistoryButton revisions={
+                [
+                  {
+                    author: 'marcusant',
+                    creation_date: '11/5/2018 5pm',
+                  },
+                ]
+              }
+              />
             </Button.Group>
           </Grid.Column>
         </Grid>
