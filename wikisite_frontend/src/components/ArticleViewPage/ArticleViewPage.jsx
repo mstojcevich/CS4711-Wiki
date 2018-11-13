@@ -2,7 +2,12 @@ import 'react-quill/dist/quill.snow.css';
 import ReactQuill from 'react-quill';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Header, Button, Divider, Grid, Icon } from 'semantic-ui-react';
+import {
+  Header,
+  Button,
+  Divider,
+  Grid,
+} from 'semantic-ui-react';
 
 import { withAPI } from '../APIHandler/APIHandler';
 import ArticleHistoryButton from './ArticleHistoryButton';
