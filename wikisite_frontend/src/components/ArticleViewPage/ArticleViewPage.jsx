@@ -6,6 +6,7 @@ import { Header, Button, Divider, Grid } from 'semantic-ui-react';
 
 import { withAPI } from '../APIHandler/APIHandler';
 import ArticleHistoryButton from './ArticleHistoryButton';
+import { formatDate } from '../../util';
 
 class ArticleViewPage extends React.Component {
   constructor(props) {
@@ -57,6 +58,10 @@ class ArticleViewPage extends React.Component {
   render() {
     const { title, quillDelta, history } = this.state;
 
+    const lastModify = history ? history[history.length - 1] : null;
+    const lastModifyDate = lastModify ? formatDate(lastModify.creation_date) : 'unknown';
+    const lastModifyUser = lastModify ? lastModify.author.username : 'unknown';
+
     return (
       <React.Fragment>
         <Grid columns="equal">
@@ -64,7 +69,7 @@ class ArticleViewPage extends React.Component {
             <Header as="h2">
               {title}
               <Header.Subheader>
-                Last updated 3 hours ago by marcusant
+                Last updated {lastModifyDate} by {lastModifyUser}
               </Header.Subheader>
             </Header>
           </Grid.Column>
