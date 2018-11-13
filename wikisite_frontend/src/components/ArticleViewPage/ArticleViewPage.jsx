@@ -2,9 +2,10 @@ import 'react-quill/dist/quill.snow.css';
 import ReactQuill from 'react-quill';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Header } from 'semantic-ui-react';
+import { Header, Button, Divider, Grid, Icon } from 'semantic-ui-react';
 
 import { withAPI } from '../APIHandler/APIHandler';
+import ArticleHistoryButton from './ArticleHistoryButton';
 
 class ArticleViewPage extends React.Component {
   constructor(props) {
@@ -44,7 +45,34 @@ class ArticleViewPage extends React.Component {
 
     return (
       <React.Fragment>
-        <Header>{title}</Header>
+        <Grid columns="equal">
+          <Grid.Column>
+            <Header as="h2">
+              {title}
+              <Header.Subheader>
+                Last updated 3 hours ago by marcusant
+              </Header.Subheader>
+            </Header>
+          </Grid.Column>
+          <Grid.Column className="right aligned">
+            <Button.Group>
+              <ArticleHistoryButton revisions={
+                [
+                  {
+                    author: 'marcusant',
+                    creation_date: '11/5/2018 5:00pm',
+                  },
+                  {
+                    author: 'test',
+                    creation_date: '11/5/2018 5:30pm',
+                  },
+                ]
+              }
+              />
+            </Button.Group>
+          </Grid.Column>
+        </Grid>
+        <Divider />
         {quillDelta !== null && (
           <ReactQuill
             value={quillDelta}
