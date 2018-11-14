@@ -2,7 +2,8 @@ import 'react-quill/dist/quill.snow.css';
 import ReactQuill from 'react-quill';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Header } from 'semantic-ui-react';
+import { Form, Header, Button } from 'semantic-ui-react';
+import ComposePage from '../ComposePage/ComposePage';
 
 import { withAPI } from '../APIHandler/APIHandler';
 
@@ -13,7 +14,9 @@ class ArticleViewPage extends React.Component {
     this.state = {
       title: 'Loading...',
       quillDelta: 'Loading...',
+      editable: false,
     };
+    this.editArticle = this.editArticle.bind(this);
   }
 
   componentDidMount() {
@@ -28,6 +31,13 @@ class ArticleViewPage extends React.Component {
     }
   }
 
+  editArticle() {
+    this.setState({
+      editable: true,
+    });
+    this.forceUpdate();
+  }
+
   requestArticleContent() {
     const { requests, id } = this.props;
 
@@ -40,20 +50,41 @@ class ArticleViewPage extends React.Component {
   }
 
   render() {
-    const { title, quillDelta } = this.state;
+    const { title, quillDelta, editable } = this.state;
+    const { isLoggedIn } = this.props;
 
-    return (
-      <React.Fragment>
-        <Header>{title}</Header>
-        {quillDelta !== null && (
-          <ReactQuill
-            value={quillDelta}
-            modules={{ toolbar: false }}
-            readOnly
-          />
-        )}
-      </React.Fragment>
-    );
+    if (!isLoggedIn()) {
+      return (
+        <React.Fragment>
+          <Header>{title}</Header>
+          {quillDelta !== null && (
+            <ReactQuill
+              value={quillDelta}
+              modules={{ toolbar: false }}
+              readOnly
+            />
+          )}
+        </React.Fragment>
+      );
+    }
+    if (!editable) {
+      return (
+        <React.Fragment>
+          <Header>{title}</Header>
+          {quillDelta !== null && (
+            <ReactQuill
+              value={quillDelta}
+              modules={{ toolbar: false }}
+              readOnly
+            />
+          )}
+          <Form onSubmit={this.editArticle}>
+            <Button type="submit">Edit article</Button>
+          </Form>
+        </React.Fragment>
+      );
+    }
+    return <ComposePage />;
   }
 }
 

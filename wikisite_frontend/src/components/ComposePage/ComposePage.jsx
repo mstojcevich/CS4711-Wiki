@@ -39,7 +39,7 @@ class ComposePage extends React.Component {
       this.setState({ destinationId: response })
     )).catch((error) => {
       const failures = error;
-      console.error(failures);
+      // console.error(failures);
 
       this.setState({
         titleProblems: failures.name || [],
