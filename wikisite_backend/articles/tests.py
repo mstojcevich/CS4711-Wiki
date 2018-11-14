@@ -149,6 +149,13 @@ class ArticleUpdateTest(APITestCase):
         """
         Test the happy path of updating an article.
         """
+        # We use a different user for the modification so that
+        # we can tell it was made properly
+        self.user = User.objects.create_user(
+            username="testUser2", password="@dequatePassword1"
+        )
+        self.client.force_login(user=self.user)
+
         article_data = {"name": self.article.name, "content": "This is a test article"}
         response = self.client.put(self.article_url, data=article_data, format="json")
 
@@ -157,3 +164,15 @@ class ArticleUpdateTest(APITestCase):
         # Make sure the article was updated in the DB
         db_article = _get_article(self.article.name)
         assert db_article["content"] == article_data["content"]
+
+        # Make sure that the new revision shows up on the bottom
+        # (use the user to determine the new revision)
+        assert response.data["revisions"][1]["author"]["username"] == "testUser2"
+
+        # Now fetch the revision and make sure that works, just for fun
+        revision_response = self.client.get(
+            response.data["revisions"][1]["url"],
+            data=article_data, format="json"
+        )
+        assert revision_response.status_code == status.HTTP_200_OK
+        assert revision_response.data["content"] == article_data["content"]

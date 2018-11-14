@@ -35,6 +35,12 @@ audit_backend:
     - cd wikisite_backend
     - bandit --skip B101 -x tests.py -r .
 
+lint_frontend:
+  script:
+    - cd wikisite_frontend
+    - npm install
+    - ./node_modules/.bin/eslint src/
+
 test_frontend:
   script:
     - cd wikisite_frontend

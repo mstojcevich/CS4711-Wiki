@@ -2,10 +2,18 @@ import 'react-quill/dist/quill.snow.css';
 import ReactQuill from 'react-quill';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Form, Header, Button } from 'semantic-ui-react';
 import ComposePage from '../ComposePage/ComposePage';
+import {
+  Header,
+  Button,
+  Divider,
+  Grid,
+} from 'semantic-ui-react';
+
 
 import { withAPI } from '../APIHandler/APIHandler';
+import ArticleHistoryButton from './ArticleHistoryButton';
+import { formatDate } from '../../util';
 
 class ArticleViewPage extends React.Component {
   constructor(props) {
@@ -14,9 +22,12 @@ class ArticleViewPage extends React.Component {
     this.state = {
       title: 'Loading...',
       quillDelta: 'Loading...',
+
       editable: false,
+      history: [],
     };
     this.editArticle = this.editArticle.bind(this);
+    this.loadRevision = this.loadRevision.bind(this);
   }
 
   componentDidMount() {
@@ -49,7 +60,19 @@ class ArticleViewPage extends React.Component {
     }));
   }
 
+  loadRevision(revision) {
+    const { requests } = this.props;
+
+    // Load the revision page
+    requests.getRevision(revision.url).then((detailedRevision) => {
+      this.setState({ quillDelta: detailedRevision.quillDelta });
+    }).catch((err) => {
+      console.error(err);
+    });
+  }
+
   render() {
+
     const { title, quillDelta, editable } = this.state;
     const { isLoggedIn } = this.props;
 

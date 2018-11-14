@@ -10,6 +10,33 @@ const SCHEMA_URL = `${API_URL}schema/`;
 const API_CONTEXT = React.createContext({});
 
 /**
+ * Generate an object of fake props for use while testing
+ */
+export const getMockAPIProps = () => {
+  const requests = {};
+
+  requestFunctions.forEach((f) => {
+    if (typeof f === 'function') {
+      requests[f.name] = () => (
+        new Promise(
+          () => { },
+          () => { },
+        )
+      );
+    }
+  });
+
+  return {
+    requests,
+    isLoading: false,
+    isLoggedIn: () => true,
+    user: {},
+    login: () => {},
+    logout: () => {},
+  };
+};
+
+/**
  * Provide a react component with props that help you use the API
  *
  * e.x. (
@@ -31,6 +58,11 @@ const API_CONTEXT = React.createContext({});
 export const withAPI = Component => (
   (props) => {
     const { Consumer } = API_CONTEXT;
+
+    // Check if we are in testing env, if so, return mock props
+    if (process.env.JEST_WORKER_ID !== undefined) {
+      return <Component {...getMockAPIProps()} {...props} />;
+    }
 
     return (
       <Consumer>
@@ -73,7 +105,7 @@ const mapFunctionsToCoreAPI = (client, schema) => {
 
   requestFunctions.forEach((f) => {
     if (typeof f === 'function') {
-      requests[f.name] = true
+      requests[f.name] = client != null
         ? params => (
           f(client, schema, params)
         )
@@ -185,8 +217,9 @@ export default class APIHandler extends React.Component {
         this.setState({
           client: new coreapi.Client({ auth }),
         }, () => {
+          const { client: clientAfterUpdate } = this.state;
           // Get the new schema (w/ authenticated endpoints),
-          client.get(SCHEMA_URL).then((newSchema) => {
+          clientAfterUpdate.get(SCHEMA_URL).then((newSchema) => {
             // Save the schema and user in state,
             this.setState({
               schema: newSchema,
@@ -228,10 +261,10 @@ export default class APIHandler extends React.Component {
       this.setState({
         client: new coreapi.Client({ auth }),
       }, () => {
-        const { client } = this.state;
+        const { client: clientAfterUpdate } = this.state;
 
         // Load the schema w/ authenticated endpoints
-        client.get(SCHEMA_URL).then((schema) => {
+        clientAfterUpdate.get(SCHEMA_URL).then((schema) => {
           this.setState({
             schema,
             user: JSON.parse(userCookie),
@@ -239,6 +272,7 @@ export default class APIHandler extends React.Component {
         }).catch(error => this.clearLoading(console.error(error.content)));
       });
     } else {
+      // The user has no cookie, re-initialize state
       const { client } = this.state;
 
       client.get(SCHEMA_URL).then((schema) => {

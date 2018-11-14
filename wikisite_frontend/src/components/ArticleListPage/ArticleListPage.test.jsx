@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ArticleList from './ArticleList';
+import ArticleListPage from './ArticleListPage';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<ArticleList />, div);
+  ReactDOM.render(<ArticleListPage />, div);
   ReactDOM.unmountComponentAtNode(div);
 });
