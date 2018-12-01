@@ -5,6 +5,7 @@ import {
   Icon,
 } from 'semantic-ui-react';
 import { Link, withRouter } from 'react-router-dom';
+import { formatDate } from '../../util';
 
 const ArticleList = ({
   articles = [],
@@ -39,7 +40,7 @@ const ArticleList = ({
                 <Link to={`/articles/${article.id}`}>{article.name}</Link>
               </List.Header>
               <List.Description>
-                <b>Created:</b> {new Date(article.creation_date).toString()}
+                <b>Created:</b> {formatDate(article.creation_date)}
               </List.Description>
             </List.Content>
           </List.Item>
