@@ -1,5 +1,5 @@
 import 'react-quill/dist/quill.snow.css';
-import ReactQuill from 'react-quill';
+import ReactQuill, { Quill } from 'react-quill';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Redirect } from 'react-router';
@@ -8,6 +8,24 @@ import {
 } from 'semantic-ui-react';
 
 import { withAPI } from '../APIHandler/APIHandler';
+
+// Quill configuration stolen from https://github.com/zenoamaro/react-quill#custom-toolbar
+const quillModules = {
+  toolbar: [
+    [{ header: [1, 2, false] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+    ['link', 'image'],
+    ['clean'],
+  ],
+};
+
+const quillFormats = [
+  'header',
+  'bold', 'italic', 'underline', 'strike', 'blockquote',
+  'list', 'bullet', 'indent',
+  'link', 'image',
+];
 
 class ComposePage extends React.Component {
   constructor(props) {
@@ -26,6 +44,25 @@ class ComposePage extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.onArticleSubmit = this.onArticleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    console.log()
+    // const ImageBlot = Quill.import('formats/image');
+    // const Parchment = Quill.import('parchment');
+
+    // Quill.root.addEventListener('click', (e) => {
+    //   console.log(e);
+
+    //   const image = Parchment.find(e.target);
+
+    //   if (image instanceof ImageBlot) {
+    //     console.log('We found an image!', image);
+    //   }
+    // });
+  }
+
+  componentWillUnmount() {
   }
 
   onArticleSubmit() {
@@ -113,6 +150,8 @@ class ComposePage extends React.Component {
           />
           <ReactQuill
             value={text}
+            modules={quillModules}
+            formats={quillFormats}
             onChange={this.handleChange}
           />
           <Divider />
