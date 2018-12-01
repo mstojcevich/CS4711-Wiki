@@ -32,7 +32,7 @@ class RecentArticles extends React.Component {
           if (date1.creation_date < date2.creation_date) return 1;
           return 0;
         };
-        const articles = response.sort(sort_articles_desc).slice(0,4);
+        const articles = response.sort(sort_articles_desc).slice(0,5);
         
         // Set the articles in state, set loading to false
         this.setState({
