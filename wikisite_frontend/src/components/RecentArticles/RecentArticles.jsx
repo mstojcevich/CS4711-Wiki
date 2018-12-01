@@ -25,9 +25,18 @@ class RecentArticles extends React.Component {
     // Request the list of articles from the API
     this.setState({ loading: true }, () => {
       getArticles().then((response) => {
+        const sort_articles_desc = function (date1, date2) {
+          // This is a comparison function that will result in dates being sorted in
+          // DESCENDING order.
+          if (date1.creation_date > date2.creation_date) return -1;
+          if (date1.creation_date < date2.creation_date) return 1;
+          return 0;
+        };
+        const articles = response.sort(sort_articles_desc).slice(0,5);
+        
         // Set the articles in state, set loading to false
         this.setState({
-          articles: response,
+          articles,
           loading: false,
         });
       }).catch(() => {
