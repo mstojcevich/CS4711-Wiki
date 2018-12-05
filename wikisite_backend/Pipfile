@@ -17,6 +17,7 @@ coreapi = "*"
 django-cors-headers = "*"
 gunicorn = "*"
 django-heroku = "*"
+pillow = "*"
 
 [dev-packages]
 pylint = "*"
