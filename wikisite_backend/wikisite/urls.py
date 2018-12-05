@@ -31,14 +31,17 @@ api_router.register(r"articles", ArticleViewSet)
 api_router.register(r"article-revisions", ArticleRevisionViewSet)
 api_router.register(r"images", ImageViewSet)
 
-schema_view = get_schema_view(title='Wiki API', renderer_classes=[CoreJSONRenderer])
+schema_view = get_schema_view(title="Wiki API", renderer_classes=[CoreJSONRenderer])
 
-urlpatterns = [
-    path("health/", include("health_check.urls")),
-    path("api-auth/", include("rest_framework.urls")),
-    path("admin/", admin.site.urls),
-    path("api/", include(api_router.urls)),
-    path("api-token-auth/", ObtainAuthToken.as_view()),
-    path("schema/", schema_view),
-] + static("/", document_root="../wikisite_frontend/build/")
-
+urlpatterns = (
+    [
+        path("health/", include("health_check.urls")),
+        path("api-auth/", include("rest_framework.urls")),
+        path("admin/", admin.site.urls),
+        path("api/", include(api_router.urls)),
+        path("api-token-auth/", ObtainAuthToken.as_view()),
+        path("schema/", schema_view),
+    ]
+    + static("/api/images/image_uploads/", document_root="image_uploads/")
+    + static("/", document_root="../wikisite_frontend/build/")
+)
