@@ -108,3 +108,6 @@ venv.bak/
 
 # Jetbrains
 .idea/
+
+# Image uploads
+wikisite_backend/image_uploads/
