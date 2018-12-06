@@ -1,5 +1,6 @@
 import 'react-quill/dist/quill.snow.css';
 import ReactQuill, { Quill } from 'react-quill';
+import imageUpload from 'quill-plugin-image-upload';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Redirect } from 'react-router';
@@ -8,9 +9,11 @@ import {
 } from 'semantic-ui-react';
 
 import { withAPI } from '../APIHandler/APIHandler';
+import './override.css';
 
-// Quill configuration stolen from https://github.com/zenoamaro/react-quill#custom-toolbar
-const quillModules = {
+Quill.register('modules/imageUpload', imageUpload);
+
+const quillModules = imageUploadHandler => ({
   toolbar: [
     [{ header: [1, 2, false] }],
     ['bold', 'italic', 'underline', 'strike', 'blockquote'],
@@ -18,14 +21,8 @@ const quillModules = {
     ['link', 'image'],
     ['clean'],
   ],
-};
-
-const quillFormats = [
-  'header',
-  'bold', 'italic', 'underline', 'strike', 'blockquote',
-  'list', 'bullet', 'indent',
-  'link', 'image',
-];
+  imageUpload: imageUploadHandler,
+});
 
 class ComposePage extends React.Component {
   constructor(props) {
@@ -47,22 +44,19 @@ class ComposePage extends React.Component {
   }
 
   componentDidMount() {
-    console.log()
-    // const ImageBlot = Quill.import('formats/image');
-    // const Parchment = Quill.import('parchment');
+    const { requests: { uploadImage } } = this.props;
+    const imageUploadHandler = ({
+      upload: file => (
+        // return a Promise that resolves in a link to the uploaded image
+        new Promise((resolve, reject) => {
+          uploadImage({
+            data: file,
+            comments: 'test',
+          }).then(resolve);
+        })),
+    });
 
-    // Quill.root.addEventListener('click', (e) => {
-    //   console.log(e);
-
-    //   const image = Parchment.find(e.target);
-
-    //   if (image instanceof ImageBlot) {
-    //     console.log('We found an image!', image);
-    //   }
-    // });
-  }
-
-  componentWillUnmount() {
+    this.setState({modules: quillModules(imageUploadHandler)});
   }
 
   onArticleSubmit() {
@@ -150,8 +144,8 @@ class ComposePage extends React.Component {
           />
           <ReactQuill
             value={text}
-            modules={quillModules}
-            formats={quillFormats}
+            modules={this.state.modules}
+            // formats={quillFormats}
             onChange={this.handleChange}
           />
           <Divider />

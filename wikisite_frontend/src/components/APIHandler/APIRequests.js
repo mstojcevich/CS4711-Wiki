@@ -115,11 +115,28 @@ function createArticle(client, schema, params) {
   }
 }
 
+function uploadImage(client, schema, params) {
+  const action = ['api', 'images', 'create'];
+
+  try {
+    return client.action(
+      schema,
+      action,
+      params,
+    ).then(response => (
+      response.data
+    ));
+  } catch (e) {
+    return new Promise((resolve, reject) => reject(e));
+  }
+}
+
 const requests = [
   getArticle,
   getArticles,
   createArticle,
   getRevision,
+  uploadImage,
 ];
 
 export default requests;
