@@ -9,6 +9,7 @@ import {
 } from 'semantic-ui-react';
 
 import { withAPI } from '../APIHandler/APIHandler';
+import ImageMetaModal from '../ImageMetaModal/ImageMetaModal';
 import './override.css';
 
 Quill.register('modules/imageUpload', imageUpload);
@@ -37,6 +38,9 @@ class ComposePage extends React.Component {
       titleProblems: [], // Problems with the title field
       contentProblems: [], // Problems with the article content
       genericProblems: [], // Other problems
+      imageCommentCallback: () => {},
+      cancelImageCommentCallback: () => {},
+      showCommentModal: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
@@ -49,14 +53,20 @@ class ComposePage extends React.Component {
       upload: file => (
         // return a Promise that resolves in a link to the uploaded image
         new Promise((resolve, reject) => {
-          uploadImage({
-            data: file,
-            comments: 'test',
-          }).then(resolve);
+          const cancel = () => this.setState({ showCommentModal: false }, reject);
+          this.rejectImageComment(cancel, () => {
+            const callback = comments => uploadImage({
+              data: file,
+              comments,
+            }).then((url) => {
+              this.setState({ showCommentModal: false }, () => resolve(url));
+            });
+            this.awaitImageComment(callback);
+          });
         })),
     });
 
-    this.setState({modules: quillModules(imageUploadHandler)});
+    this.setState({ modules: quillModules(imageUploadHandler) });
   }
 
   onArticleSubmit() {
@@ -86,6 +96,19 @@ class ComposePage extends React.Component {
     });
   }
 
+  awaitImageComment(callback) {
+    this.setState({
+      showCommentModal: true,
+      imageCommentCallback: callback,
+    });
+  }
+
+  rejectImageComment(reject, callback) {
+    this.setState({
+      cancelImageCommentCallback: reject,
+    }, callback);
+  }
+
   handleTitleChange(e) {
     this.setState({ title: e.target.value });
   }
@@ -102,6 +125,10 @@ class ComposePage extends React.Component {
       genericProblems,
       titleProblems,
       contentProblems,
+      modules,
+      showCommentModal,
+      imageCommentCallback,
+      cancelImageCommentCallback,
     } = this.state;
 
     if (!isLoggedIn()) {
@@ -144,13 +171,17 @@ class ComposePage extends React.Component {
           />
           <ReactQuill
             value={text}
-            modules={this.state.modules}
-            // formats={quillFormats}
+            modules={modules}
             onChange={this.handleChange}
           />
           <Divider />
           <Button type="submit">Create article</Button>
         </Form>
+        <ImageMetaModal
+          visible={showCommentModal}
+          onSubmit={imageCommentCallback}
+          onCancel={cancelImageCommentCallback}
+        />
       </React.Fragment>
     );
   }
