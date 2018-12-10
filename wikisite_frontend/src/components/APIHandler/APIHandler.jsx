@@ -10,6 +10,22 @@ const SCHEMA_URL = `${API_URL}schema/`;
 const API_CONTEXT = React.createContext({});
 
 /**
+ * Correctly set the images schema encoding to 'multipart/form-data'
+ * @param {Object} schema
+ */
+const adjustSchemaEncoding = (schema) => {
+  const newSchema = Object.assign({}, schema);
+
+  try {
+    newSchema.content.api.images.create.encoding = 'multipart/form-data';
+  } catch (e) {
+    console.error(e);
+  }
+
+  return schema;
+};
+
+/**
  * Generate an object of fake props for use while testing
  */
 export const getMockAPIProps = () => {
@@ -222,7 +238,7 @@ export default class APIHandler extends React.Component {
           clientAfterUpdate.get(SCHEMA_URL).then((newSchema) => {
             // Save the schema and user in state,
             this.setState({
-              schema: newSchema,
+              schema: adjustSchemaEncoding(newSchema),
               user: authenticatedUser,
             }, () => {
               const { user } = this.state;
@@ -266,7 +282,7 @@ export default class APIHandler extends React.Component {
         // Load the schema w/ authenticated endpoints
         clientAfterUpdate.get(SCHEMA_URL).then((schema) => {
           this.setState({
-            schema,
+            schema: adjustSchemaEncoding(schema),
             user: JSON.parse(userCookie),
           }, this.mapRequestsToClient);
         }).catch(error => this.clearLoading(console.error(error.content)));
@@ -278,7 +294,7 @@ export default class APIHandler extends React.Component {
       client.get(SCHEMA_URL).then((schema) => {
         this.setState({
           ...getInitState(),
-          schema,
+          schema: adjustSchemaEncoding(schema),
         }, this.mapRequestsToClient);
       }).catch(error => this.clearLoading(console.error(error.content)));
     }

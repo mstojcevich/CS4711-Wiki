@@ -1,0 +1,7 @@
+/** Remove dumb animations **/
+.quill-plugin-image-upload-placeholder {
+  all: initial;
+  * {
+    all: unset;
+  }
+}
