@@ -39,3 +39,11 @@ class ArticleRevision(models.Model):
 
     def __str__(self):
         return str(self.article) + " - " + str(self.creation_date)
+
+
+class IPBan(models.Model):
+    ip = models.GenericIPAddressField(null=False, unique=True, db_index=True)
+    reason = models.TextField(null=True)
+
+    def __str__(self):
+        return self.ip + ": " + self.reason
