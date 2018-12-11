@@ -195,3 +195,22 @@ class ArticleUpdateTest(APITestCase):
         response = self.client.put(self.article_url, data=article_data, format="json")
 
         assert response.status_code != status.HTTP_200_OK
+
+    def test_update_article_locked_superuser(self):
+        """
+        Test that, as a superuser, updating a locked article succeeds
+        """
+        self.article.locked = True
+        self.article.save()
+
+        # We use a different user for the modification so that
+        # we can tell it was made properly
+        self.user = User.objects.create_superuser(
+            username="testUser2", password="@dequatePassword1", email="root@localhost"
+        )
+        self.client.force_login(user=self.user)
+
+        article_data = {"name": self.article.name, "content": "This is a test article"}
+        response = self.client.put(self.article_url, data=article_data, format="json")
+
+        assert response.status_code == status.HTTP_200_OK
