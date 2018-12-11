@@ -88,6 +88,7 @@ class ArticleViewPage extends React.Component {
                 onSelect={this.loadRevision}
                 revisions={history}
               />
+              {locked === false && <Button compact><Icon name="edit" />Edit</Button>}
             </Button.Group>
           </Grid.Column>
         </Grid>
