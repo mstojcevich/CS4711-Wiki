@@ -40,11 +40,12 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         model = Article
         fields = (
             "url", "id", "creation_date", "name", "content",
-            "last_updated", "revisions"
+            "last_updated", "revisions", "locked"
         )
 
         extra_kwargs = {
-            "creation_date": {"read_only": True}
+            "creation_date": {"read_only": True},
+            "locked": {"read_only": True}
         }
 
     def update(self, instance, validated_data):
