@@ -116,6 +116,35 @@ function createArticle(client, schema, params) {
   }
 }
 
+/**
+ * Update an existing article as an authenticated user
+ * @param {Object} client coreAPI client, supplied by APIHandler
+ * @param {Object} schema coreAPI schema, supplied by APIHandler
+ * @param {Object} params article content formatted as quill data
+ * {
+ *    name: {string} article title,
+ *    content: {object} quill data object that has article content and formatting
+ * }
+ */
+function updateArticle(client, schema, params) {
+  const action = ['api', 'articles', 'update'];
+
+  try {
+    return client.action(
+      schema,
+      action,
+      params,
+    ).then(response => ({
+      title: response.name,
+      quillDelta: JSON.parse(response.content),
+      history: response.revisions,
+      locked: response.locked,
+    }));
+  } catch (e) {
+    return new Promise((resolve, reject) => reject(e));
+  }
+}
+
 function uploadImage(client, schema, params) {
   const action = ['api', 'images', 'create'];
 
@@ -138,6 +167,7 @@ const requests = [
   createArticle,
   getRevision,
   uploadImage,
+  updateArticle,
 ];
 
 export default requests;
