@@ -9,6 +9,7 @@ import LoginPage from './components/LoginPage/LoginPage';
 import HomePage from './components/HomePage/HomePage';
 import ComposePage from './components/ComposePage/ComposePage';
 import ArticleViewPage from './components/ArticleViewPage/ArticleViewPage';
+import ArticleListPage from './components/ArticleListPage/ArticleListPage';
 
 /**
  * App component
@@ -37,6 +38,7 @@ class App extends React.Component {
                     <Route path="/" exact component={() => <HomePage />} />
                     <Route path="/login" exact component={() => <LoginPage onLogin={this.onLogin} />} />
                     <Route path="/compose" exact component={() => <ComposePage />} />
+                    <Route path="/article-list" exact component={() => <ArticleList />} />
                     <Route
                       path="/articles/:id"
                       exact
