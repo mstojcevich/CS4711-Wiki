@@ -176,3 +176,22 @@ class ArticleUpdateTest(APITestCase):
         )
         assert revision_response.status_code == status.HTTP_200_OK
         assert revision_response.data["content"] == article_data["content"]
+
+    def test_update_article_locked(self):
+        """
+        Test that updating a locked article fails
+        """
+        self.article.locked = True
+        self.article.save()
+
+        # We use a different user for the modification so that
+        # we can tell it was made properly
+        self.user = User.objects.create_user(
+            username="testUser2", password="@dequatePassword1"
+        )
+        self.client.force_login(user=self.user)
+
+        article_data = {"name": self.article.name, "content": "This is a test article"}
+        response = self.client.put(self.article_url, data=article_data, format="json")
+
+        assert response.status_code != status.HTTP_200_OK
