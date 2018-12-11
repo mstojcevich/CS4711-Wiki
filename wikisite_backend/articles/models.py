@@ -9,6 +9,7 @@ class Article(models.Model):
 
     creation_date = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=64, unique=True)
+    locked = models.BooleanField(default=False, null=False)
 
     @property
     def latest_revision(self):
@@ -38,3 +39,11 @@ class ArticleRevision(models.Model):
 
     def __str__(self):
         return str(self.article) + " - " + str(self.creation_date)
+
+
+class IPBan(models.Model):
+    ip = models.GenericIPAddressField(null=False, unique=True, db_index=True)
+    reason = models.TextField(null=True)
+
+    def __str__(self):
+        return self.ip + ": " + self.reason
