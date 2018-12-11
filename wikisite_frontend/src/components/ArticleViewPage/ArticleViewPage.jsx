@@ -7,6 +7,7 @@ import {
   Button,
   Divider,
   Grid,
+  Icon,
 } from 'semantic-ui-react';
 
 import { withAPI } from '../APIHandler/APIHandler';
@@ -61,7 +62,9 @@ class ArticleViewPage extends React.Component {
   }
 
   render() {
-    const { title, quillDelta, history } = this.state;
+    const {
+      title, quillDelta, history, locked,
+    } = this.state;
 
     const lastModify = history ? history[history.length - 1] : null;
     const lastModifyDate = lastModify ? formatDate(lastModify.creation_date) : 'unknown';
@@ -79,6 +82,7 @@ class ArticleViewPage extends React.Component {
             </Header>
           </Grid.Column>
           <Grid.Column className="right aligned">
+            {locked === true && <Icon name="lock" />}
             <Button.Group>
               <ArticleHistoryButton
                 onSelect={this.loadRevision}
