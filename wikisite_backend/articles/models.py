@@ -9,6 +9,7 @@ class Article(models.Model):
 
     creation_date = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=64, unique=True)
+    locked = models.BooleanField(default=False, null=False)
 
     @property
     def latest_revision(self):
