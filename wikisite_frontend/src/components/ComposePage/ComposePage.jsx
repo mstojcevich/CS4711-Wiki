@@ -1,6 +1,5 @@
 import 'react-quill/dist/quill.snow.css';
 import ReactQuill, { Quill } from 'react-quill';
-import imageUpload from 'quill-plugin-image-upload';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Redirect } from 'react-router';
@@ -10,6 +9,7 @@ import {
 
 import { withAPI } from '../APIHandler/APIHandler';
 import ImageMetaModal from '../ImageMetaModal/ImageMetaModal';
+import imageUpload from '../../image-upload-plugin-fork/quill-plugin-image-upload-master';
 import './override.css';
 
 Quill.register('modules/imageUpload', imageUpload);
@@ -24,6 +24,13 @@ const quillModules = imageUploadHandler => ({
   ],
   imageUpload: imageUploadHandler,
 });
+
+const quillFormats = [
+  'header',
+  'bold', 'italic', 'underline', 'strike', 'blockquote',
+  'list', 'bullet', 'indent',
+  'link', 'image', 'clean', 'imageUpload', 'data-meta-url',
+];
 
 class ComposePage extends React.Component {
   constructor(props) {
@@ -58,8 +65,11 @@ class ComposePage extends React.Component {
             const callback = comments => uploadImage({
               data: file,
               comments,
-            }).then((url) => {
-              this.setState({ showCommentModal: false }, () => resolve(url));
+            }).then((data) => {
+              this.setState({ showCommentModal: false }, () => resolve({
+                url: data.data,
+                metaUrl: data.url,
+              }));
             });
             this.awaitImageComment(callback);
           });
@@ -171,6 +181,7 @@ class ComposePage extends React.Component {
           />
           <ReactQuill
             value={text}
+            formats={quillFormats}
             modules={modules}
             onChange={this.handleChange}
           />

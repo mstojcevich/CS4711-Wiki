@@ -154,7 +154,7 @@ function uploadImage(client, schema, params) {
       action,
       params,
     ).then(response => (
-      response.data
+      response
     ));
   } catch (e) {
     return new Promise((resolve, reject) => reject(e));
