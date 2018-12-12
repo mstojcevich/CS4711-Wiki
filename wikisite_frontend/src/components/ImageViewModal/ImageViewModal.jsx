@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Modal, Card, Image, Header,
+  Modal, Card, Image, Header, Icon, Grid,
 } from 'semantic-ui-react';
 import { withAPI } from '../APIHandler/APIHandler';
 import { formatDate } from '../../util';
@@ -23,8 +23,10 @@ class ImageViewModal extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.metaUrl !== this.props.metaUrl) {
-      if (this.props.metaUrl === null) {
+    const { metaUrl } = this.props;
+    if (prevProps.metaUrl !== metaUrl) {
+      if (metaUrl === null) {
+        // eslint-disable-next-line
         this.setState(getInitstate);
       } else {
         this.fetchMetaInformation();
@@ -44,7 +46,9 @@ class ImageViewModal extends React.Component {
         url: response.data.replace(/\/\d+\//, '/'),
         isLoading: false,
         filename: response.data.split('/').pop(),
-      })).catch(e => this.setState({
+        size: response.file_size,
+        dimensions: response.dimensions,
+      })).catch(() => this.setState({
         ...getInitstate(),
         isLoading: false,
       }));
@@ -89,6 +93,22 @@ class ImageViewModal extends React.Component {
                 <span className="date">Uploaded on {formatDate(uploadDate)} by <b>{user}</b></span>
               </Card.Meta>
               <Card.Description>{comment}</Card.Description>
+            </Card.Content>
+            <Card.Content extra>
+              <Grid columns={2}>
+                <Grid.Column>
+                  <span>
+                    <Icon name="database" />
+                    File Size: {size || 'N/A'}
+                  </span>
+                </Grid.Column>
+                <Grid.Column>
+                  <span>
+                    <Icon name="crop" />
+                    Dimensions: {dimensions || 'N/A'}
+                  </span>
+                </Grid.Column>
+              </Grid>
             </Card.Content>
           </Card>
         </Modal.Content>
