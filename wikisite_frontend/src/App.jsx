@@ -9,7 +9,7 @@ import LoginPage from './components/LoginPage/LoginPage';
 import HomePage from './components/HomePage/HomePage';
 import ComposePage from './components/ComposePage/ComposePage';
 import ArticleViewPage from './components/ArticleViewPage/ArticleViewPage';
-import ArticleListPage from './components/ArticleListPage/ArticleListPage';
+import ArticleList from './components/ArticleList/ArticleList';
 
 /**
  * App component
