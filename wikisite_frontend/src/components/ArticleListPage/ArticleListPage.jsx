@@ -52,7 +52,7 @@ class ArticleListPage extends React.Component {
 
     return (
       <React.Fragment>
-        <Header as="h2">ArticleListPage</Header>
+        <Header as="h2">Articles</Header>
         <ArticleList
           articles={articles}
           loading={loading}
