@@ -38,7 +38,7 @@ class App extends React.Component {
                     <Route path="/" exact component={() => <HomePage />} />
                     <Route path="/login" exact component={() => <LoginPage onLogin={this.onLogin} />} />
                     <Route path="/compose" exact component={() => <ComposePage />} />
-                    <Route path="/article-list" exact component={() => <ArticleList />} />
+                    <Route path="/article-list" exact component={() => <ArticleListPage />} />
                     <Route
                       path="/articles/:id"
                       exact
