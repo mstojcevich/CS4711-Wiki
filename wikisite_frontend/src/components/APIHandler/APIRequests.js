@@ -36,6 +36,7 @@ function getArticle(client, schema, params) {
       title: response.name,
       quillDelta: JSON.parse(response.content),
       history: response.revisions,
+      locked: response.locked,
     })).catch(error => error);
   } catch (e) {
     return new Promise((resolve, reject) => reject(e));
