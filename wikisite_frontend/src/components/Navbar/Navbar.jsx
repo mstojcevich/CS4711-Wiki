@@ -52,8 +52,8 @@ class NavBar extends React.Component {
             <Link to="/">Wikisite</Link>
           </Menu.Item>
           <Menu.Item>
-        <Link to="/article-list">Articles</Link>
-      </Menu.Item>
+            <Link to="/article-list">Articles</Link>
+          </Menu.Item>
           <Menu.Menu position="right">
             <Menu.Item>
               <Form onSubmit={this.onSearchSubmit}>
