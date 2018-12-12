@@ -44,6 +44,36 @@ function getArticle(client, schema, params) {
 }
 
 /**
+ * Get an article from the API based on the id given in params
+ *
+ * @param {Object} client coreAPI client, supplied by APIHandler
+ * @param {Object} schema coreAPI schema, supplied by APIHandler
+ * @param {Object} params object containing desired article's id
+ * {
+ *   id: {string|number}
+ * }
+ *
+ * @return {Object}
+ * {
+ *   title: {String} article title,
+ *   quillDelta: {Object} used by the quill editor library to render article contents
+ * }
+ */
+function getImageMeta(client, schema, params) {
+  const action = ['api', 'images', 'read'];
+
+  try {
+    return client.action(
+      schema,
+      action,
+      params,
+    ).then(response => response).catch(error => error);
+  } catch (e) {
+    return new Promise((resolve, reject) => reject(e));
+  }
+}
+
+/**
  * Get the contents of an article revision
  *
  * @param {Object} client coreAPI client, supplied by APIHandler
@@ -161,6 +191,7 @@ function uploadImage(client, schema, params) {
   }
 }
 
+
 const requests = [
   getArticle,
   getArticles,
@@ -168,6 +199,7 @@ const requests = [
   getRevision,
   uploadImage,
   updateArticle,
+  getImageMeta,
 ];
 
 export default requests;

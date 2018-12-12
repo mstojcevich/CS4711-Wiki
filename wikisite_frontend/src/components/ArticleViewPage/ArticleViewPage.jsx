@@ -11,12 +11,13 @@ import {
   Message,
 } from 'semantic-ui-react';
 
-import imageUpload from 'quill-plugin-image-upload';
+import imageUpload from '../../image-upload-plugin-fork/quill-plugin-image-upload-master';
 import { withAPI } from '../APIHandler/APIHandler';
 import ArticleHistoryButton from './ArticleHistoryButton';
 import { formatDate } from '../../util';
 import '../ComposePage/override.css';
 import ImageMetaModal from '../ImageMetaModal/ImageMetaModal';
+import ImageViewModal from '../ImageViewModal/ImageViewModal';
 
 // TODO we duplicate a lot of logic from the compose page (for editing),
 // we should probably move editing entirely over to the compose page
@@ -34,6 +35,13 @@ const quillModules = imageUploadHandler => ({
   imageUpload: imageUploadHandler,
 });
 
+const quillFormats = [
+  'header',
+  'bold', 'italic', 'underline', 'strike', 'blockquote',
+  'list', 'bullet', 'indent',
+  'link', 'image', 'clean', 'imageUpload', 'data-meta-url',
+];
+
 class ArticleViewPage extends React.Component {
   constructor(props) {
     super(props);
@@ -49,12 +57,15 @@ class ArticleViewPage extends React.Component {
       imageCommentCallback: () => {},
       cancelImageCommentCallback: () => {},
       showCommentModal: false,
+      clickedImage: null,
+      viewingImage: false,
     };
 
     this.loadRevision = this.loadRevision.bind(this);
     this.onEditButton = this.onEditButton.bind(this);
     this.onSaveButton = this.onSaveButton.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidMount() {
@@ -69,8 +80,11 @@ class ArticleViewPage extends React.Component {
             const callback = comments => uploadImage({
               data: file,
               comments,
-            }).then((url) => {
-              this.setState({ showCommentModal: false }, () => resolve(url));
+            }).then((data) => {
+              this.setState({ showCommentModal: false }, () => resolve({
+                url: data.data,
+                metaUrl: data.url,
+              }));
             });
             this.awaitImageComment(callback);
           });
@@ -86,6 +100,8 @@ class ArticleViewPage extends React.Component {
     if (id !== prevProps.id) {
       this.requestArticleContent();
     }
+
+    this.attachImageHandlers();
   }
 
   onEditButton() {
@@ -142,7 +158,7 @@ class ArticleViewPage extends React.Component {
     const { requests, id } = this.props;
 
     requests.getArticle({ id }).then((response) => {
-      this.setState(response);
+      this.setState(response, this.attachImageHandlers);
     }).catch(() => this.setState({
       title: 'Could not retrieve article',
       quillDelta: null,
@@ -160,6 +176,25 @@ class ArticleViewPage extends React.Component {
     });
   }
 
+  attachImageHandlers() {
+    Array.from(document.getElementsByTagName('img')).forEach((item) => {
+      const metaUrl = item.getAttribute('data-meta-url');
+      item.addEventListener('click', () => {
+        this.setState({
+          clickedImage: metaUrl,
+          viewingImage: true,
+        });
+      });
+    });
+  }
+
+  closeModal() {
+    this.setState({
+      viewingImage: false,
+      clickedImage: null,
+    });
+  }
+
   render() {
     const {
       genericProblems,
@@ -171,6 +206,8 @@ class ArticleViewPage extends React.Component {
       showCommentModal,
       cancelImageCommentCallback,
       imageCommentCallback,
+      clickedImage,
+      viewingImage,
     } = this.state;
 
     const lastModify = history ? history[history.length - 1] : null;
@@ -213,11 +250,18 @@ class ArticleViewPage extends React.Component {
         </Grid>
         <Divider />
         {quillDelta !== null && editing === false && (
-          <ReactQuill
-            value={quillDelta}
-            modules={{ toolbar: false }}
-            readOnly
-          />
+          <React.Fragment>
+            <ReactQuill
+              value={quillDelta}
+              modules={{ toolbar: false }}
+              readOnly
+            />
+            <ImageViewModal
+              metaUrl={clickedImage}
+              visible={viewingImage}
+              onClose={this.closeModal}
+            />
+          </React.Fragment>
         )}
         {quillDelta !== null && editing === true && (
           <React.Fragment>
@@ -225,6 +269,7 @@ class ArticleViewPage extends React.Component {
               defaultValue={quillDelta}
               onChange={this.handleChange}
               modules={modules}
+              formats={quillFormats}
             />
             <Divider />
             <Button onClick={this.onSaveButton}><Icon name="save" />Save</Button>
