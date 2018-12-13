@@ -210,6 +210,8 @@ class ArticleViewPage extends React.Component {
       viewingImage,
     } = this.state;
 
+    const { user } = this.props;
+
     const lastModify = history ? history[history.length - 1] : null;
     const lastModifyDate = lastModify ? formatDate(lastModify.creation_date) : 'unknown';
     const lastModifyUser = lastModify ? lastModify.author.username : 'unknown';
@@ -244,7 +246,7 @@ class ArticleViewPage extends React.Component {
                 onSelect={this.loadRevision}
                 revisions={history}
               />
-              {locked === false && <Button onClick={this.onEditButton} compact><Icon name="edit" />Edit</Button>}
+              {(locked === false || (user && user.username === 'admin')) && <Button onClick={this.onEditButton} compact><Icon name="edit" />Edit</Button>}
             </Button.Group>
           </Grid.Column>
         </Grid>
