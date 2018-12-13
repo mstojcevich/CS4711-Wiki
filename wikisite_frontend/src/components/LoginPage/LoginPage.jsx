@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Button, Message } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
+import { Redirect } from 'react-router';
 
 import { withAPI } from '../APIHandler/APIHandler';
 
@@ -73,6 +74,13 @@ class LoginPage extends React.Component {
 
   render() {
     const { usernameProblems, passwordProblems, genericProblems } = this.state;
+    const { isLoggedIn } = this.props;
+
+    if (isLoggedIn()) {
+      return (
+        <Redirect to="/" />
+      );
+    }
 
     return (
       <React.Fragment>
