@@ -41,7 +41,7 @@ class ImageUpload {
   }
 
   insertToEditor(params) {
-    this.quill.updateContents(this.quill.getContents().insert({ imageUpload: params.url }, { 'data-meta-url': params.metaUrl }));
+    this.quill.setContents(this.quill.getContents().insert({ imageUpload: params.url }, { 'data-meta-url': params.metaUrl }));
   }
 }
 
