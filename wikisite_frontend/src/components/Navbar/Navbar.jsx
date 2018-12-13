@@ -91,7 +91,7 @@ function LoggedOutUserSection() {
   return (
     <>
       <Menu.Item>
-        <Link to="/login">Register</Link>
+        <Link to="/register">Register</Link>
       </Menu.Item>
       <Menu.Item>
         <Link to="/login">Login</Link>
