@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { Card, Container, Header } from 'semantic-ui-react';
+import { Card, Container } from 'semantic-ui-react';
 
 import APIHandler from './components/APIHandler/APIHandler';
 import Navbar from './components/Navbar/Navbar';

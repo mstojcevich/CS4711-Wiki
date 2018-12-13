@@ -1,12 +1,12 @@
 import React from 'react';
-import { Header, Form, Button, Message } from 'semantic-ui-react';
+import { Header } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 import { Redirect } from 'react-router';
 
 import { withAPI } from '../APIHandler/APIHandler';
 
 /**
- * LoginPage component
+ * ProfilePage component
  *
  * Contains a form to log into the wiki site
  */
@@ -18,14 +18,10 @@ class ProfilePage extends React.Component {
       email: '',
       username: '',
       password: '',
-      usernameProblems: [],
-      passwordProblems: [],
-      genericProblems: [],
     };
   }
 
   render() {
-    const { usernameProblems, passwordProblems, genericProblems } = this.state;
     const { user, isLoggedIn } = this.props;
 
     if (!isLoggedIn()) {

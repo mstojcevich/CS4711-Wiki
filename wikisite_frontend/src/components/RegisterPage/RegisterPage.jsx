@@ -32,7 +32,7 @@ class RegisterPage extends React.Component {
    * Log the user in, route back to '/'
    */
    onRegisterSubmit() {
-     const { login, requests, history } = this.props;
+     const { login, requests } = this.props;
      const { username, password } = this.state;
 
      requests.registerUser({
@@ -47,7 +47,7 @@ class RegisterPage extends React.Component {
              usernameProblems: [],
              passwordProblems: [],
              genericProblems: [],
-           }, () => history.goBack());
+           });
          },
          (failures) => {
            this.setState({
@@ -107,7 +107,7 @@ class RegisterPage extends React.Component {
 
     if (isLoggedIn()) {
       return (
-        <Redirect to={`/profile/${user.user_id}`} />
+        <Redirect to={`/profile/${user.username}`} />
       );
     }
 

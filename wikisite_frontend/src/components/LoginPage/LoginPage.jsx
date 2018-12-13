@@ -2,7 +2,6 @@ import React from 'react';
 import { Form, Button, Message } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 import { Redirect } from 'react-router';
-
 import { withAPI } from '../APIHandler/APIHandler';
 
 /**
@@ -32,7 +31,7 @@ class LoginPage extends React.Component {
    */
   onLoginSubmit() {
     const { username, password } = this.state;
-    const { login, history } = this.props;
+    const { login } = this.props;
 
     login(
       username,
@@ -42,7 +41,7 @@ class LoginPage extends React.Component {
           usernameProblems: [],
           passwordProblems: [],
           genericProblems: [],
-        }, () => history.goBack());
+        });
       },
       (failures) => {
         this.setState({
@@ -74,11 +73,11 @@ class LoginPage extends React.Component {
 
   render() {
     const { usernameProblems, passwordProblems, genericProblems } = this.state;
-    const { isLoggedIn } = this.props;
+    const { isLoggedIn, user } = this.props;
 
     if (isLoggedIn()) {
       return (
-        <Redirect to="/" />
+        <Redirect to={`/profile/${user.username}`} />
       );
     }
 

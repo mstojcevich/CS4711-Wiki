@@ -78,7 +78,7 @@ function LoggedInUserSection(props) {
   return (
     <React.Fragment>
       <Menu.Item>
-        <Link to={`/profile/${user.user_id}`}>{ user.username }</Link>
+        <Link to={`/profile/${user.username}`}>{ user.username }</Link>
       </Menu.Item>
       <Menu.Item>
         <Link to="/" onClick={logout}>Logout</Link>
