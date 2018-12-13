@@ -7,6 +7,7 @@ import Navbar from './components/Navbar/Navbar';
 import NotFound from './components/NotFound/NotFound';
 import LoginPage from './components/LoginPage/LoginPage';
 import RegisterPage from './components/RegisterPage/RegisterPage';
+import ProfilePage from './components/ProfilePage/ProfilePage';
 import HomePage from './components/HomePage/HomePage';
 import ComposePage from './components/ComposePage/ComposePage';
 import ArticleViewPage from './components/ArticleViewPage/ArticleViewPage';
@@ -53,7 +54,7 @@ class App extends React.Component {
                       exact
                       component={
                         ({ match: { params } }) => (
-                          <Header as="h1">Welcome user (id={params.userId})</Header>
+                          <ProfilePage />
                         )
                       }
                     />
