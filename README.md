@@ -9,6 +9,7 @@
 
 To setup the development environment, you'll need Python 3 and pipenv. On Mac with homebrew or Linux this should be trivial. 
 
+
 ### Installing Python 3 and pipenv on Windows
 
   Step 1: Install Node.js

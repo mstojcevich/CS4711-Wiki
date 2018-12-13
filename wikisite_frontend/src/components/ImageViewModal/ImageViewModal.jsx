@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Modal, Card, Image, Header, Icon, Grid,
 } from 'semantic-ui-react';
+import filesize from 'filesize';
 import { withAPI } from '../APIHandler/APIHandler';
 import { formatDate } from '../../util';
 
@@ -46,8 +47,8 @@ class ImageViewModal extends React.Component {
         url: response.data.replace(/\/\d+\//, '/'),
         isLoading: false,
         filename: response.data.split('/').pop(),
-        size: response.file_size,
-        dimensions: response.dimensions,
+        size: filesize(response.file_size, { round: 0 }),
+        dimensions: `${response.width} x ${response.height}`,
       })).catch(() => this.setState({
         ...getInitstate(),
         isLoading: false,
