@@ -191,10 +191,26 @@ function uploadImage(client, schema, params) {
   }
 }
 
+function registerUser(client, schema, params) {
+  const action = ['api', 'users', 'create'];
+
+  try {
+    return client.action(
+      schema,
+      action,
+      params,
+    ).then(response => (
+      response.id
+    ));
+  } catch (e) {
+    return new Promise((resolve, reject) => reject(e));
+  }
+}
 
 const requests = [
   getArticle,
   getArticles,
+  registerUser,
   createArticle,
   getRevision,
   uploadImage,

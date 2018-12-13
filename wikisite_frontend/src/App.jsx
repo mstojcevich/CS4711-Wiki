@@ -1,11 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { Card, Container, Header } from 'semantic-ui-react';
+import { Card, Container } from 'semantic-ui-react';
 
 import APIHandler from './components/APIHandler/APIHandler';
 import Navbar from './components/Navbar/Navbar';
 import NotFound from './components/NotFound/NotFound';
 import LoginPage from './components/LoginPage/LoginPage';
+import RegisterPage from './components/RegisterPage/RegisterPage';
+import ProfilePage from './components/ProfilePage/ProfilePage';
 import HomePage from './components/HomePage/HomePage';
 import ComposePage from './components/ComposePage/ComposePage';
 import ArticleViewPage from './components/ArticleViewPage/ArticleViewPage';
@@ -37,6 +39,7 @@ class App extends React.Component {
                   <Switch>
                     <Route path="/" exact component={() => <HomePage />} />
                     <Route path="/login" exact component={() => <LoginPage onLogin={this.onLogin} />} />
+                    <Route path="/register" exact component={() => <RegisterPage onRegister={this.onRegister} />} />
                     <Route path="/compose" exact component={() => <ComposePage />} />
                     <Route path="/article-list" exact component={() => <ArticleListPage />} />
                     <Route
@@ -51,7 +54,7 @@ class App extends React.Component {
                       exact
                       component={
                         ({ match: { params } }) => (
-                          <Header as="h1">Welcome user (id={params.userId})</Header>
+                          <ProfilePage />
                         )
                       }
                     />
