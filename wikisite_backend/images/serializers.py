@@ -8,9 +8,23 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
         many=False, read_only=True, default=serializers.CurrentUserDefault()
     )
 
+    width = serializers.IntegerField(source="data.width", read_only=True)
+    height = serializers.IntegerField(source="data.height", read_only=True)
+    file_size = serializers.IntegerField(source="data.size", read_only=True)
+
     class Meta:
         model = Image
-        fields = ("url", "uploaded_by", "id", "upload_date", "comments", "data")
+        fields = (
+            "url",
+            "uploaded_by",
+            "id",
+            "upload_date",
+            "comments",
+            "data",
+            "width",
+            "height",
+            "file_size",
+        )
 
     def create(self, validated_data):
         user = None
