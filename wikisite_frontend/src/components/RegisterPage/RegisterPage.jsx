@@ -99,7 +99,7 @@ class RegisterPage extends React.Component {
         <Message
           attached="bottom"
           error
-          header="Failed to log in"
+          header="Failed to register"
           list={genericProblems}
           hidden={genericProblems.length === 0}
         />
